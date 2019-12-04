@@ -1,0 +1,23 @@
+[build-system]
+requires = [ "poetry>=0.12",]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry]
+name = "pyparam"
+version = "0.2.4"
+description = "Powerful parameter processing."
+authors = [ "pwwang <pwwang@pwwang.com>",]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/pwwang/pyparam"
+repository = "https://github.com/pwwang/pyparam"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+colorama = "*"
+completions = "*"
+python-simpleconf = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-cov = "*"
