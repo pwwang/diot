@@ -2,6 +2,8 @@
 
 Python dictionary with dot notation
 
+[![pypi][1]][2] [![tag][3]][4] [![travis][5]][6] [![codacy quality][7]][8] [![codacy quality][9]][8] ![pyver][10]
+
 - Partially compartible with `python-box`
 - Issue #87 of `python-box` fixed
 - Nest conversion of inside `dict/list` turned off
@@ -131,3 +133,14 @@ diot_of_order.d = 3
 
 list(diot_of_order.keys()) == ['c', 'a', 'd']
 ```
+
+[1]: https://img.shields.io/pypi/v/diot?style=flat-square
+[2]: https://pypi.org/project/diot/
+[3]: https://img.shields.io/github/tag/pwwang/diot?style=flat-square
+[4]: https://github.com/pwwang/diot
+[5]: https://img.shields.io/travis/pwwang/diot?style=flat-square
+[6]: https://travis-ci.org/pwwang/diot
+[7]: https://img.shields.io/codacy/grade/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
+[8]: https://app.codacy.com/project/pwwang/diot/dashboard
+[9]: https://img.shields.io/codacy/coverage/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
+[10]: https://img.shields.io/pypi/pyversions/diot?style=flat-square
