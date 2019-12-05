@@ -64,6 +64,9 @@ def test_safe():
 	diot.update({'': 1})
 	assert diot._ == 1
 
+	diot = Diot({'__': 1})
+	assert diot.__ == 1
+
 def test_camel():
 
 	diot = CamelDiot(a_b = 1)
