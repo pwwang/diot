@@ -1,4 +1,4 @@
-# diot
+![Logo](https://raw.githubusercontent.com/pwwang/diot/master/logo.png)
 
 Python dictionary with dot notation
 
