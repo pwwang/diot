@@ -4,19 +4,19 @@ from multiprocessing import Process, Queue
 from diot import Diot, CamelDiot, SnakeDiot, OrderedDiot
 test_dict = {'key1': 'value1',
 			 'diot_nest': [dict, list],
-             'not$allowed': 'fine_value',
-             'BigCamel': 'hi',
-             'alist': [{'a': 1}],
-             "Key 2": {"Key 3": "Value 3",
-                       "Key4": {"Key5": "Value5"}}}
+			 'not$allowed': 'fine_value',
+			 'BigCamel': 'hi',
+			 'alist': [{'a': 1}],
+			 "Key 2": {"Key 3": "Value 3",
+					   "Key4": {"Key5": "Value5"}}}
 extended_test_dict = {
-    3: 'howdy',
-    'not': 'true',
-    '_box_config': True,
-    'CamelCase': '21',
-    '321CamelCase': 321,
-    False: 'tree',
-    'tuples_galore': ({'item': 3}, ({'item': 4}, 5))}
+	3: 'howdy',
+	'not': 'true',
+	'_box_config': True,
+	'CamelCase': '21',
+	'321CamelCase': 321,
+	False: 'tree',
+	'tuples_galore': ({'item': 3}, ({'item': 4}, 5))}
 extended_test_dict.update(test_dict)
 
 def test_box():
@@ -342,3 +342,55 @@ def test_readme():
 
 	assert movie_box.movies.Spaceballs.stars[0].name == 'Mel Brooks'
 	# 'Mel Brooks'
+
+
+def test_to_json(tmp_path):
+	import json
+	a = Diot(**test_dict)
+	assert json.loads(a.to_json(indent=0)) == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+
+	tmp_json_file = tmp_path / 'diot_test_to_json.json'
+	a.to_json(tmp_json_file)
+	with open(tmp_json_file) as f:
+		data = json.load(f)
+		assert data == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+
+def installed(module):
+	try:
+		__import__(module)
+		return True
+	except ImportError:
+		return False
+
+@pytest.mark.skipif(not installed('yaml'), reason = 'pyyaml not installed.')
+def test_to_yaml():
+	import yaml
+	a = Diot(**test_dict)
+	assert yaml.load(a.to_yaml(), Loader=yaml.SafeLoader) == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+
+@pytest.mark.skipif(not installed('yaml'), reason = 'pyyaml not installed.')
+def test_to_yaml_file(tmp_path):
+	import yaml
+	a = Diot(**test_dict)
+	tmp_yaml_file = tmp_path / 'diot_test_to_yaml.yaml'
+	a.to_yaml(tmp_yaml_file)
+	with open(tmp_yaml_file) as f:
+		data = yaml.load(f, Loader=yaml.SafeLoader)
+		assert data == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+
+
+@pytest.mark.skipif(not installed('toml'), reason = 'toml not installed.')
+def test_to_toml():
+	import toml
+	a = Diot(**test_dict)
+	assert toml.loads(a.to_toml()) == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+
+@pytest.mark.skipif(not installed('toml'), reason = 'toml not installed.')
+def test_to_toml_file(tmp_path):
+	import toml
+	a = Diot(**test_dict)
+	tmp_toml_file = tmp_path / 'diot_test_to_toml.toml'
+	a.to_toml(tmp_toml_file)
+	with open(tmp_toml_file) as f:
+		data = toml.load(f)
+		assert data == {key:val for key,val in test_dict.items() if key != 'diot_nest'}

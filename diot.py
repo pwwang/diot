@@ -9,7 +9,10 @@ def safe_transform(item):
 	"""
 	Transform an arbitrary key into a safe key for dot notation
 	"""
-	item = re.sub(r'[^\w_]+', '.', item)
+	if isinstance(item, bytes):
+		item = item.decode("utf-8")
+	item = str(item)
+	item = re.sub(r'[^A-Za-z0-9_]+', '.', item)
 	item = re.sub(r'_?\.+|\.+_?', '_', item)
 	if not item:
 		return ''
@@ -82,6 +85,16 @@ def _nest(value, types, dest_type):
 		return dest_type([(key, _nest(val, types, dest_type)) for key, val in value.items()])
 	return value
 
+def _dict(value):
+	"""Convert converted Diot objects back to dict"""
+	if isinstance(value, dict):
+		return {key: _dict(val) for key, val in value.items()}
+	if isinstance(value, tuple):
+		return tuple((_dict(val) for val in value))
+	if isinstance(value, list):
+		return [_dict(val) for val in value]
+	return value
+
 class Diot(dict):
 	"""Dictionary with dot notation"""
 	def __init__(self, *args, **kwargs):
@@ -99,7 +112,7 @@ class Diot(dict):
 
 		super().__init__(*args, **kwargs)
 		for key in self:
-			transformed_key = self._diot_transform(str(key))
+			transformed_key = self._diot_transform(key)
 			if transformed_key in self._diot_keymaps:
 				raise KeyError(f"Keys {self._diot_keymaps[transformed_key]!r} and {key!r} "
 					"will be transformed to the same attribute. Either change one of them "
@@ -117,7 +130,7 @@ class Diot(dict):
 			self[name] = _nest(value, self._diot_nest, self.__class__)
 
 	def __setitem__(self, name, value):
-		transformed_key = self._diot_transform(str(name))
+		transformed_key = self._diot_transform(name)
 		if transformed_key in self._diot_keymaps \
 			and transformed_key != name and self._diot_keymaps[transformed_key] != name:
 			raise KeyError(f"{name!r} will be transformed to the same attribute as "
@@ -204,6 +217,56 @@ class Diot(dict):
 			self.items(), diot_nest = self._diot_nest, diot_transform = self._diot_transform)
 
 	__copy__ = copy
+
+	def to_dict(self):
+		"""
+		Turn the Box and sub Boxes back into a native
+		python dictionary.
+		"""
+		return _dict(self)
+
+	dict = as_dict = to_dict
+
+	def to_json(self, filename = None, encoding = "utf-8", errors = "strict", **json_kwargs):
+		"""Convert to a json string or save it to json file"""
+		import json
+		json_dump = json.dumps(self.to_dict(), ensure_ascii = False, **json_kwargs)
+		if not filename:
+			return json_dump
+		with open(filename, 'w', encoding = encoding, errors = errors) as fjs:
+			fjs.write(json_dump)
+
+	json = as_json = to_json
+
+	def to_yaml(self, filename = None, default_flow_style = False,
+		encoding = "utf-8", errors = "strict", **yaml_kwargs):
+		"""Convert to a yaml string or save it to yaml file"""
+		try:
+			import yaml
+		except ImportError as exc: # pragma: no cover
+			raise ImportError('You need pyyaml installed to export Diot as yaml.') from exc
+		yaml_dump = self.to_dict()
+		if not filename:
+			return yaml.dump(yaml_dump, default_flow_style = default_flow_style, **yaml_kwargs)
+		with open(filename, 'w', encoding = encoding, errors = errors) as fyml:
+			yaml.dump(yaml_dump, stream = fyml,
+				default_flow_style = default_flow_style, **yaml_kwargs)
+
+	yaml = as_yaml = to_yaml
+
+	def to_toml(self, filename = None, encoding = "utf-8", errors = "strict"):
+		"""Convert to a toml string or save it to toml file"""
+		try:
+			import toml
+		except ImportError as exc: # pragma: no cover
+			raise ImportError("You need toml installed to export Diot as toml.") from exc
+		toml_dump = self.to_dict()
+		if not filename:
+			return toml.dumps(toml_dump)
+		with open(filename, 'w', encoding = encoding, errors = errors) as ftml:
+			toml.dump(toml_dump, ftml)
+
+	toml = as_toml = to_toml
 
 class NestDiot(Diot):
 	"""With recursive dict/list/tuple conversion"""

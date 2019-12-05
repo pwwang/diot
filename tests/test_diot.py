@@ -106,3 +106,29 @@ def test_nest_diot():
 	assert isinstance(dt.a.b.c[0], NestDiot)
 	assert dt.a.b.c[0].d == 1
 
+def test_unicode_key():
+	dt = Diot({u'a键值b': 1})
+	assert dt.a_b == 1
+
+def test_bytes_key():
+	dt = Diot({b'a_@_b': 1})
+	assert dt.a__b == 1
+
+def test_to_dict():
+	dt = NestDiot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
+	assert isinstance(dt.a, NestDiot)
+	assert isinstance(dt.a.b, NestDiot)
+	assert isinstance(dt.a.b.c[0], NestDiot)
+	assert isinstance(dt.a.b.e[0], NestDiot)
+	assert dt.a.b.c[0].d == 1
+	assert dt.a.b.e[0].f == 2
+
+	d = dt.dict()
+	assert not isinstance(d['a'], NestDiot)
+	assert not isinstance(d['a']['b'], NestDiot)
+	assert not isinstance(d['a']['b']['c'][0], NestDiot)
+	assert not isinstance(d['a']['b']['e'][0], NestDiot)
+
+	assert d == {'a': {'b': {'c': [{'d': 1}], 'e': ({'f': 2}, )}}}
+
+
