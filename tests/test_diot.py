@@ -1,4 +1,5 @@
 import pytest
+from copy import deepcopy
 from collections import OrderedDict
 from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot, NestDiot
 
@@ -131,4 +132,48 @@ def test_to_dict():
 
 	assert d == {'a': {'b': {'c': [{'d': 1}], 'e': ({'f': 2}, )}}}
 
+def test_deepcopy():
+	dt = NestDiot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
+	dt2 = deepcopy(dt)
+	assert dt == dt2
+	assert dt is not dt2
+	assert dt.a is not dt2.a
+	assert dt.a.b is not dt2.a.b
+	assert dt.a.b.c is not dt2.a.b.c
+	assert dt.a.b.c[0] is not dt2.a.b.c[0]
+	assert dt.a.b.e is not dt2.a.b.e
+	assert dt.a.b.e[0] is not dt2.a.b.e[0]
 
+
+def test_trydeepcopy():
+
+	def tryDeepCopy(obj, _recurvise = True):
+		"""
+		Try do deepcopy an object. If fails, just do a shallow copy.
+		@params:
+			obj (any): The object
+			_recurvise (bool): A flag to avoid deep recursion
+		@returns:
+			The copied object
+		"""
+		if _recurvise and isinstance(obj, dict):
+			# do a shallow copy first
+			# we don't start with an empty dictionary, because obj may be
+			# an object from a class extended from dict
+			ret = obj.copy()
+			for key, value in obj.items():
+				ret[key] = tryDeepCopy(value, False)
+			return ret
+		if _recurvise and isinstance(obj, list):
+			ret = obj[:]
+			for i, value in enumerate(obj):
+				ret[i] = tryDeepCopy(value, False)
+			return ret
+		try:
+			return deepcopy(obj)
+		except TypeError:
+			return obj
+
+	dt = NestDiot(a = Diot(b = Diot(c=1)))
+	dt3 = tryDeepCopy(dt)
+	assert dt3 == dt

@@ -3,6 +3,7 @@ Python dictionary with dot notation
 """
 import re
 import keyword
+from copy import deepcopy
 import inflection
 
 def safe_transform(item):
@@ -217,6 +218,14 @@ class Diot(dict):
 			self.items(), diot_nest = self._diot_nest, diot_transform = self._diot_transform)
 
 	__copy__ = copy
+
+	def __deepcopy__(self, memo = None):
+		out = self.__class__(diot_nest = self._diot_nest, diot_transform = self._diot_transform)
+		memo = memo or {}
+		memo[id(self)] = out
+		for key, value in self.items():
+			out[key] = deepcopy(value, memo)
+		return out
 
 	def to_dict(self):
 		"""
