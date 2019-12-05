@@ -205,6 +205,12 @@ class Diot(dict):
 
 	__copy__ = copy
 
+class NestDiot(Diot):
+	"""With recursive dict/list/tuple conversion"""
+	def __init__(self, *args, **kwargs):
+		kwargs['diot_nest'] = [list, dict, tuple]
+		super().__init__(*args, **kwargs)
+
 class CamelDiot(Diot):
 	"""With camel case conversion"""
 	def __init__(self, *args, **kwargs):
@@ -220,8 +226,8 @@ class SnakeDiot(Diot):
 class OrderedDiot(Diot):
 	"""With key order preserved"""
 	def __init__(self, *args, **kwargs):
-		self._diot_orderedkeys = [key for arg in args for key, _ in arg] + \
-			[key for key in kwargs if not key.startswith('diot_')]
+		self._diot_orderedkeys = [key[0] if isinstance(key, tuple) else key
+			for arg in args for key in arg] + [key for key in kwargs if not key.startswith('diot_')]
 		super().__init__(*args, **kwargs)
 
 	def __setitem__(self, name, value):

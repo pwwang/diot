@@ -1,6 +1,6 @@
 import pytest
 from collections import OrderedDict
-from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot
+from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot, NestDiot
 
 @pytest.mark.parametrize('value, types, dest_type, expected, expectedtype', [
 	({'a': 1}, [], dict, {'a': 1}, dict),
@@ -88,10 +88,21 @@ def test_ordered():
 	assert list(diot.keys()) == ['x', 'c', 'b', 'a', '_']
 	assert list(diot.values()) == [9, 1, 2, 3, 8]
 
+	dt = OrderedDiot(OrderedDict([('b',1), ('a',2), ('c',3)]))
+	assert list(dt.keys()) == ['b', 'a', 'c']
+
+
 def test_upper_lower():
 	dt = Diot(a=1, diot_transform = 'upper')
 	assert dt.A == dt['a'] == dt['A'] == 1
 
 	dt = Diot(A=1, diot_transform = 'lower')
 	assert dt.a == dt['a'] == dt['A'] == 1
+
+def test_nest_diot():
+	dt = NestDiot(a = {'b': {'c': [{'d': 1}]}})
+	assert isinstance(dt.a, NestDiot)
+	assert isinstance(dt.a.b, NestDiot)
+	assert isinstance(dt.a.b.c[0], NestDiot)
+	assert dt.a.b.c[0].d == 1
 

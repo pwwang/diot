@@ -8,7 +8,7 @@ Python dictionary with dot notation
 - Customization of key conversion
 
 ```python
-from diot import Diot
+from diot import Diot, NestDiot
 
 movie_data = {
   "movies": {
@@ -40,6 +40,7 @@ movie_data = {
 # Box is a conversion_box by default, pass in `conversion_box=False` to disable that behavior
 # Explicitly tell Diot to convert dict/list inside
 movie_diot = Diot(movie_data, diot_nest = True)
+# or movie_diot = NestDiot(movie_data)
 
 movie_diot.movies.Robin_Hood_Men_in_Tights.imdb_stars
 # 6.7
@@ -47,7 +48,7 @@ movie_diot.movies.Robin_Hood_Men_in_Tights.imdb_stars
 movie_diot.movies.Spaceballs.stars[0].name
 # 'Mel Brooks'
 
-# Different as box, you have to use Diot
+# Different as box, you have to use Diot for new data in a list
 movie_diot.movies.Spaceballs.stars.append(
 	Diot({"name": "Bill Pullman", "imdb": "nm0000597", "role": "Lone Starr"}))
 movie_diot.movies.Spaceballs.stars[-1].role
