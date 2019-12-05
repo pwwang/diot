@@ -151,7 +151,9 @@ class Diot(dict):
 		return super().__getitem__(original_key)
 
 	def pop(self, name, *value):
-		name = self._diot_keymaps.get(name, name)
+		if name in self._diot_keymaps:
+			name = self._diot_keymaps[name]
+			del self._diot_keymaps[name]
 		if value:
 			return super().pop(name, value[0])
 		return super().pop(name)
@@ -165,9 +167,12 @@ class Diot(dict):
 		return key, val
 
 	def update(self, *value, **kwargs):
-		for val in value:
-			super().update(_nest(val, self._diot_nest, self.__class__))
-		super().update(_nest(kwargs, self._diot_nest, self.__class__))
+		dict_to_update = dict(*value, **kwargs)
+		for key, val in dict_to_update.items():
+			if key not in self or not isinstance(self[key], dict) or not isinstance(val, dict):
+				self[key] = _nest(val, self._diot_nest, self.__class__)
+			else:
+				self[key].update(val)
 
 	def __delitem__(self, name):
 		if name in self._diot_keymaps:

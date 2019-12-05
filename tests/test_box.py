@@ -117,6 +117,7 @@ def test_update():
 	assert isinstance(a.lister, list)
 	assert a.asdf == 'fdsa'
 	assert a.testkey == 66
+	assert a.key1.new == 5  # On regular dict update this shouldn't happen
 	assert a.key1.gg == 4
 
 	c = Diot(diot_nest=[dict])
