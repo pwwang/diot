@@ -1,77 +1,117 @@
-# pyparam
-[![pypi][1]][2] [![pypi][10]][11] [![travis][3]][4] [![docs][18]][19] [![codacy quality][5]][6] [![codacy quality][7]][6] ![pyver][8]
+# diot
 
-Powerful parameter processing
+Python dictionary with dot notation
 
-## Features
-- Command line argument parser (with subcommand support)
-- `list/array`, `dict`, `positional` and `verbose` options support
-- Type overwriting for parameters
-- Rich API for Help page redefinition
-- Parameter loading from configuration files
-- Shell completions
+- Partially compartible with `python-box`
+- Issue #87 of `python-box` fixed
+- Nest conversion of inside `dict/list` turned off
+- Customization of key conversion
 
-## Installation
-```shell
-pip install pyparam
-# install latest version via poetry
-git clone https://github.com/pwwang/pyparam.git
-cd pyparam
-poetry install
-```
-
-## Basic usage
-
-`examples/basic.py`
 ```python
-from pyparam import params
-# define arguments
-params.version      = False
-params.version.desc = 'Show the version and exit.'
-params.quiet        = False
-params.quiet.desc   = 'Silence warnings'
-params.v            = 0
-# verbose option
-params.v.type = 'verbose'
-# alias
-params.verbose = params.v
-# list/array options
-params.packages      = []
-params.packages.desc = 'The packages to install.'
-params.depends       = {}
-params.depends.desc  = 'The dependencies'
+from diot import Diot
 
-print(params._parse())
+movie_data = {
+  "movies": {
+    "Spaceballs": {
+      "imdb stars": 7.1,
+      "rating": "PG",
+      "length": 96,
+      "director": "Mel Brooks",
+      "stars": [{"name": "Mel Brooks", "imdb": "nm0000316", "role": "President Skroob"},
+                {"name": "John Candy","imdb": "nm0001006", "role": "Barf"},
+                {"name": "Rick Moranis", "imdb": "nm0001548", "role": "Dark Helmet"}
+      ]
+    },
+    "Robin Hood: Men in Tights": {
+      "imdb stars": 6.7,
+      "rating": "PG-13",
+      "length": 104,
+      "director": "Mel Brooks",
+      "stars": [
+                {"name": "Cary Elwes", "imdb": "nm0000144", "role": "Robin Hood"},
+                {"name": "Richard Lewis", "imdb": "nm0507659", "role": "Prince John"},
+                {"name": "Roger Rees", "imdb": "nm0715953", "role": "Sheriff of Rottingham"},
+                {"name": "Amy Yasbeck", "imdb": "nm0001865", "role": "Marian"}
+      ]
+    }
+  }
+}
+
+# Box is a conversion_box by default, pass in `conversion_box=False` to disable that behavior
+# Explicitly tell Diot to convert dict/list inside
+movie_diot = Diot(movie_data, diot_nest = True)
+
+movie_diot.movies.Robin_Hood_Men_in_Tights.imdb_stars
+# 6.7
+
+movie_diot.movies.Spaceballs.stars[0].name
+# 'Mel Brooks'
+
+# Different as box, you have to use Diot
+movie_diot.movies.Spaceballs.stars.append(
+	Diot({"name": "Bill Pullman", "imdb": "nm0000597", "role": "Lone Starr"}))
+movie_diot.movies.Spaceballs.stars[-1].role
+# 'Lone Starr'
 ```
+
+## Install
 ```shell
-> python example/basic.py
-```
-![help][9]
-
-```shell
-> python examples/basic.py -vv --quiet \
-	--packages numpy pandas pyparam \
-	--depends.completions 0.0.1
-{'h': False, 'help': False, 'H': False,
- 'v': 2, 'verbose': 2, 'version': False,
- 'V': False, 'quiet': True, 'packages': ['numpy', 'pandas', 'pyparam'],
- 'depends': {'completions': '0.0.1'}}
+pip install diot
 ```
 
-## Documentation
-[ReadTheDocs][19]
+## Diot
 
+Instantiated the same ways as `dict`
+```python
+Diot({'data': 2, 'count': 5})
+Diot(data=2, count=5)
+Diot({'data': 2, 'count': 1}, count=5)
+Diot([('data', 2), ('count', 5)])
 
-[1]: https://img.shields.io/pypi/v/pyparam.svg?style=flat-square
-[2]: https://pypi.org/project/pyparam/
-[3]: https://img.shields.io/travis/pwwang/pyparam.svg?style=flat-square
-[4]: https://travis-ci.org/pwwang/pyparam
-[5]: https://img.shields.io/codacy/grade/a34b1afaccf84019a6b138d40932d566.svg?style=flat-square
-[6]: https://app.codacy.com/project/pwwang/pyparam/dashboard
-[7]: https://img.shields.io/codacy/coverage/a34b1afaccf84019a6b138d40932d566.svg?style=flat-square
-[8]: https://img.shields.io/pypi/pyversions/pyparam.svg?style=flat-square
-[9]: https://raw.githubusercontent.com/pwwang/pyparam/master/docs/static/help.png
-[10]: https://img.shields.io/github/tag/pwwang/pyparam.svg?style=flat-square
-[11]: https://github.com/pwwang/pyparam
-[18]: https://img.shields.io/readthedocs/pyparam.svg?style=flat-square
-[19]: https://pyparam.readthedocs.io/en/latest/
+# All will create
+# Diot([('data', 2), ('count', 5)], diot_nest = False, diot_transform = 'safe')
+```
+
+Same as `python-box`, `Diot` is a subclass of dict which overrides some base functionality to make sure everything stored in the dict can be accessed as an attribute or key value.
+
+```python
+diot = Diot({'data': 2, 'count': 5})
+diot.data == diot['data'] == getattr(diot, 'data')
+```
+
+By default, diot uses a safe transformation to transform keys into safe names that can be accessed by `diot.xxx`
+```python
+dt = Diot({"321 Is a terrible Key!": "yes, really"})
+dt._321_Is_a_terrible_Key_
+# 'yes, really'
+```
+
+Different as `python-box`, duplicate attributes are not allowed.
+```python
+dt = Diot({"!bad!key!": "yes, really", ".bad.key.": "no doubt"})
+# KeyError
+```
+
+Use different transform functions:
+
+```python
+dt = Diot(oneTwo = 12, diot_transform = 'snake_case')
+# or use alias:
+# dt = SnakeDiot(oneTwo = 12)
+dt.one_two == dt['one_two'] == dt['oneTwo'] == 12
+
+dt = Diot(one_two = 12, diot_transform = 'camel_case')
+# or use alias:
+# dt = CamelDiot(one_two = 12)
+dt.oneTwo == dt['one_two'] == dt['oneTwo'] == 12
+```
+
+## OrderedDiot
+```python
+diot_of_order = OrderedDiot()
+diot_of_order.c = 1
+diot_of_order.a = 2
+diot_of_order.d = 3
+
+list(diot_of_order.keys()) == ['c', 'a', 'd']
+```
