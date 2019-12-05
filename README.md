@@ -104,6 +104,21 @@ dt = Diot(one_two = 12, diot_transform = 'camel_case')
 # or use alias:
 # dt = CamelDiot(one_two = 12)
 dt.oneTwo == dt['one_two'] == dt['oneTwo'] == 12
+
+dt = Diot(one_two = 12, diot_transform = 'upper')
+dt.ONE_TWO == dt['one_two'] == dt['ONETWO'] == 12
+
+dt = Diot(ONE_TWO = 12, diot_transform = 'lower')
+dt.one_two == dt['ONE_TWO'] == dt['one_two'] == 12
+```
+
+Use your own transform function:
+
+```python
+import inflection
+
+dt = Diot(post = 10, diot_transform = inflection.pluralize)
+dt.posts == dt['posts'] == dt['post'] == 10
 ```
 
 ## OrderedDiot

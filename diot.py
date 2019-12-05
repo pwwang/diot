@@ -12,7 +12,7 @@ def safe_transform(item):
 	item = re.sub(r'[^\w_]+', '.', item)
 	item = re.sub(r'_?\.+|\.+_?', '_', item)
 	if not item:
-		return '_'
+		return ''
 	return '_' + item if item[0] in '0123456789' or item in keyword.kwlist else item
 
 def camel_case(item):
@@ -36,11 +36,34 @@ def snake_case(item):
 	item = safe_transform(item)
 	return inflection.underscore(item)
 
+def upper_case(item):
+	"""
+	oneTwo => ONETWO
+	"""
+	item = safe_transform(item)
+	return item.upper()
+
+def lower_case(item):
+	"""
+	ONETWO => onetwo
+	"""
+	item = safe_transform(item)
+	return item.lower()
+
 TRANSFORMS = dict(
 	safe           = safe_transform,
 	safe_transform = safe_transform,
 	camel_case     = camel_case,
+	camelCase      = camel_case,
 	snake_case     = snake_case
+	upper          = upper_case,
+	lower          = lower_case,
+	upper_case     = upper_case,
+	lower_case     = lower_case,
+	uppercase      = upper_case,
+	lowercase      = lower_case,
+	UPPERCASE      = upper_case,
+	UPPER_CASE     = upper_case,
 )
 
 __all__ = ['Diot', 'CamelDiot', 'SnakeDiot', 'OrderedDiot']
