@@ -56,13 +56,13 @@ def test_safe():
 		diot.a.d[1].f
 
 	diot = Diot({'': 1})
-	assert diot._ == 1
+	assert diot[''] == 1
 
-	assert diot.pop('_') == 1
+	assert diot.pop('') == 1
 	assert diot == {}
 
 	diot.update({'': 1})
-	assert diot._ == 1
+	assert diot[''] == 1
 
 	diot = Diot({'__': 1})
 	assert diot.__ == 1
@@ -87,3 +87,11 @@ def test_ordered():
 	diot._ = 8
 	assert list(diot.keys()) == ['x', 'c', 'b', 'a', '_']
 	assert list(diot.values()) == [9, 1, 2, 3, 8]
+
+def test_upper_lower():
+	dt = Diot(a=1, diot_transform = 'upper')
+	assert dt.A == dt['a'] == dt['A'] == 1
+
+	dt = Diot(A=1, diot_transform = 'lower')
+	assert dt.a == dt['a'] == dt['A'] == 1
+
