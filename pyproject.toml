@@ -19,3 +19,5 @@ inflection = "0.*"
 [tool.poetry.dev-dependencies]
 pytest = "*"
 pytest-cov = "*"
+pyyaml = "*"
+toml = "*"
