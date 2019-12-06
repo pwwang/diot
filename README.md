@@ -9,7 +9,7 @@ Python dictionary with dot notation
 - Customization of key conversion
 
 ```python
-from diot import Diot, NestDiot
+from diot import Diot
 
 movie_data = {
   "movies": {
@@ -70,7 +70,7 @@ Diot({'data': 2, 'count': 1}, count=5)
 Diot([('data', 2), ('count', 5)])
 
 # All will create
-# Diot([('data', 2), ('count', 5)], diot_nest = False, diot_transform = 'safe')
+# Diot([('data', 2), ('count', 5)], diot_nest = True, diot_transform = 'safe')
 ```
 
 Same as `python-box`, `Diot` is a subclass of dict which overrides some base functionality to make sure everything stored in the dict can be accessed as an attribute or key value.
