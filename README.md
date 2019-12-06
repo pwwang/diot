@@ -6,7 +6,6 @@ Python dictionary with dot notation
 
 - Partially compartible with `python-box`
 - Issue #87 of `python-box` fixed
-- Nest conversion of inside `dict/list` turned off
 - Customization of key conversion
 
 ```python
@@ -41,8 +40,7 @@ movie_data = {
 
 # Box is a conversion_box by default, pass in `conversion_box=False` to disable that behavior
 # Explicitly tell Diot to convert dict/list inside
-movie_diot = Diot(movie_data, diot_nest = True)
-# or movie_diot = NestDiot(movie_data)
+movie_diot = Diot(movie_data)
 
 movie_diot.movies.Robin_Hood_Men_in_Tights.imdb_stars
 # 6.7

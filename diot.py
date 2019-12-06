@@ -100,14 +100,13 @@ class Diot(dict):
 	"""Dictionary with dot notation"""
 	def __init__(self, *args, **kwargs):
 		self._diot_keymaps   = {}
-		self._diot_nest      = kwargs.pop('diot_nest') if 'diot_nest' in kwargs else False
+		self._diot_nest      = kwargs.pop('diot_nest', True)
 		self._diot_nest      = [dict, list, tuple] if self._diot_nest is True \
 			else [] if self._diot_nest is False \
 			else list(self._diot_nest) if isinstance(self._diot_nest, tuple) \
 			else self._diot_nest if isinstance(self._diot_nest, list) \
 			else [self._diot_nest]
-		self._diot_transform = kwargs.pop('diot_transform') if 'diot_transform' in kwargs \
-			else safe_transform
+		self._diot_transform = kwargs.pop('diot_transform', 'safe')
 		if isinstance(self._diot_transform, str):
 			self._diot_transform = TRANSFORMS[self._diot_transform]
 
@@ -190,9 +189,9 @@ class Diot(dict):
 			if val == idot_transform:
 				idot_transform = key
 				break
-		return '{}({}, diot_nest = {}, diot_transform = {!r})'.format(
+		return '{}({}, diot_nest = [{}], diot_transform = {!r})'.format(
 			self.__class__.__name__, list(self.items()),
-			[dn.__name__ for dn in self._diot_nest], idot_transform)
+			', '.join(dn.__name__ for dn in self._diot_nest), idot_transform)
 
 	def __str__(self):
 		return repr(dict(self))
@@ -281,12 +280,6 @@ class Diot(dict):
 			toml.dump(toml_dump, ftml)
 
 	toml = as_toml = to_toml
-
-class NestDiot(Diot):
-	"""With recursive dict/list/tuple conversion"""
-	def __init__(self, *args, **kwargs):
-		kwargs['diot_nest'] = [list, dict, tuple]
-		super().__init__(*args, **kwargs)
 
 class CamelDiot(Diot):
 	"""With camel case conversion"""

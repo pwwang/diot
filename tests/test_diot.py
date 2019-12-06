@@ -1,7 +1,7 @@
 import pytest
 from copy import deepcopy
 from collections import OrderedDict
-from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot, NestDiot
+from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot
 
 @pytest.mark.parametrize('value, types, dest_type, expected, expectedtype', [
 	({'a': 1}, [], dict, {'a': 1}, dict),
@@ -24,7 +24,6 @@ def test_safe():
 	assert diot.a_b == 2
 	diot['a_@_c'] = 3
 	assert diot.a__c == 3
-
 	diot2 = eval(repr(diot))
 	assert diot2.a_b == 2
 	assert diot2.a__c == 3
@@ -50,11 +49,11 @@ def test_safe():
 	assert diot.a.g()
 
 	with pytest.raises(AttributeError):
-		diot.a.b.c
+		diot.a.b.c.x
 	with pytest.raises(AttributeError):
-		diot.a.d[0].e
+		diot.a.d[0].e.x
 	with pytest.raises(AttributeError):
-		diot.a.d[1].f
+		diot.a.d[1].f.x
 
 	diot = Diot({'': 1})
 	assert diot[''] == 1
@@ -101,10 +100,10 @@ def test_upper_lower():
 	assert dt.a == dt['a'] == dt['A'] == 1
 
 def test_nest_diot():
-	dt = NestDiot(a = {'b': {'c': [{'d': 1}]}})
-	assert isinstance(dt.a, NestDiot)
-	assert isinstance(dt.a.b, NestDiot)
-	assert isinstance(dt.a.b.c[0], NestDiot)
+	dt = Diot(a = {'b': {'c': [{'d': 1}]}})
+	assert isinstance(dt.a, Diot)
+	assert isinstance(dt.a.b, Diot)
+	assert isinstance(dt.a.b.c[0], Diot)
 	assert dt.a.b.c[0].d == 1
 
 def test_unicode_key():
@@ -116,24 +115,24 @@ def test_bytes_key():
 	assert dt.a__b == 1
 
 def test_to_dict():
-	dt = NestDiot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
-	assert isinstance(dt.a, NestDiot)
-	assert isinstance(dt.a.b, NestDiot)
-	assert isinstance(dt.a.b.c[0], NestDiot)
-	assert isinstance(dt.a.b.e[0], NestDiot)
+	dt = Diot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
+	assert isinstance(dt.a, Diot)
+	assert isinstance(dt.a.b, Diot)
+	assert isinstance(dt.a.b.c[0], Diot)
+	assert isinstance(dt.a.b.e[0], Diot)
 	assert dt.a.b.c[0].d == 1
 	assert dt.a.b.e[0].f == 2
 
 	d = dt.dict()
-	assert not isinstance(d['a'], NestDiot)
-	assert not isinstance(d['a']['b'], NestDiot)
-	assert not isinstance(d['a']['b']['c'][0], NestDiot)
-	assert not isinstance(d['a']['b']['e'][0], NestDiot)
+	assert not isinstance(d['a'], Diot)
+	assert not isinstance(d['a']['b'], Diot)
+	assert not isinstance(d['a']['b']['c'][0], Diot)
+	assert not isinstance(d['a']['b']['e'][0], Diot)
 
 	assert d == {'a': {'b': {'c': [{'d': 1}], 'e': ({'f': 2}, )}}}
 
 def test_deepcopy():
-	dt = NestDiot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
+	dt = Diot(a = {'b': {'c': [{'d': 1}], 'e': ({'f': 2},)}})
 	dt2 = deepcopy(dt)
 	assert dt == dt2
 	assert dt is not dt2
@@ -174,6 +173,6 @@ def test_trydeepcopy():
 		except TypeError:
 			return obj
 
-	dt = NestDiot(a = Diot(b = Diot(c=1)))
+	dt = Diot(a = Diot(b = Diot(c=1)))
 	dt3 = tryDeepCopy(dt)
 	assert dt3 == dt
