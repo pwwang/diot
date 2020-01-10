@@ -176,3 +176,84 @@ def test_trydeepcopy():
 	dt = Diot(a = Diot(b = Diot(c=1)))
 	dt3 = tryDeepCopy(dt)
 	assert dt3 == dt
+
+def test_ordereddiot_insert():
+
+	od = OrderedDiot()
+	od.insert(0, "c", "d")
+	assert od == {'c': 'd'}
+	od.insert(0, ("a", "b"))
+	assert od == {'a': "b", "c": "d"}
+	assert list(od.keys()) == ['a', 'c']
+
+	od.insert(None, "x", "y")
+	assert list(od.keys()) == ['a', 'c', 'x']
+	assert od.x == 'y'
+	del od.x
+
+	od.insert_before('a', "e", "f")
+	assert list(od.keys()) == ['e', 'a', 'c']
+	assert od.e == 'f'
+
+	od.insert_after("a", ("g", "h"))
+	assert list(od.keys()) == ['e', 'a', 'g', 'c']
+	assert od.g == 'h'
+
+	od2 = OrderedDiot()
+	od2.a1 = 'b1'
+	od2.c1 = 'd1'
+	od.insert(-1, od2)
+	assert list(od.keys()) == ['e', 'a', 'g', 'a1', 'c1', 'c']
+	assert od.a1 == 'b1'
+	assert od.c1 == 'd1'
+
+	od3 = OrderedDiot()
+	od3.a2 = 'b2'
+	od3.c2 = 'd2'
+	od.insert_before('c', od3)
+	assert list(od.keys()) == ['e', 'a', 'g', 'a1', 'c1', 'a2', 'c2', 'c']
+	assert od.a2 == 'b2'
+	assert od.c2 == 'd2'
+
+	od4 = OrderedDiot()
+	od4.a3 = 'b3'
+	od4.c3 = 'd3'
+	od.insert_after('a2', od4)
+	assert list(od.keys()) == ['e', 'a', 'g', 'a1', 'c1', 'a2', 'a3', 'c3', 'c2', 'c']
+	assert od.a3 == 'b3'
+	assert od.c3 == 'd3'
+
+	with pytest.raises(KeyError):
+		od.insert_before('Nosuchkey', 'x', 'y')
+
+	with pytest.raises(KeyError):
+		od.insert_after('Nosuchkey', 'x', 'y')
+
+	with pytest.raises(KeyError):
+		od.insert_before('c', 'c', 'y') # key exists
+
+	with pytest.raises(KeyError):
+		od.insert_after('c', 'c', 'y') # key exists
+
+	with pytest.raises(ValueError):
+		od.insert(0, od4, 1)
+
+	with pytest.raises(ValueError):
+		od.insert(0, ('m', 2), 1)
+
+	with pytest.raises(ValueError):
+		od.insert(0, ('m', 1, 2))
+
+	with pytest.raises(ValueError):
+		od.insert_before('a', od4, 1)
+
+	with pytest.raises(ValueError):
+		od.insert_before('a', ('m', 2), 1)
+
+	with pytest.raises(ValueError):
+		od.insert_after('a', od4, 1)
+
+	with pytest.raises(ValueError):
+		od.insert_after('a', ('m', 2), 1)
+
+
