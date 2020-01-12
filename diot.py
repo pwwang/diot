@@ -80,10 +80,9 @@ def _nest(value, types, dest_type):
         return value
     if not isinstance(value, tuple(types)):
         return value
-    if list in types and isinstance(value, list):
-        return [_nest(val, types, dest_type) for val in value]
-    if tuple in types and isinstance(value, tuple):
-        return tuple((_nest(val, types, dest_type) for val in value))
+    if ((list in types and isinstance(value, list)) or
+            (tuple in types and isinstance(value, tuple))):
+        return value.__class__([_nest(val, types, dest_type) for val in value])
     if dict in types and isinstance(value, dict):
         return dest_type([(key, _nest(val, types, dest_type))
                           for key, val in value.items()])
@@ -218,10 +217,10 @@ class Diot(dict):
         return repr(dict(self))
 
     def setdefault(self, name, value):
-        name = self._diot_keymaps.get(name, name)
-        return super().setdefault(name, _nest(value,
-                                              self._diot_nest,
-                                              self.__class__))
+        if name in self:
+            return self[name]
+        self[name] = value
+        return self[name]
 
     def accessible_keys(self):
         """Get the converted keys"""
