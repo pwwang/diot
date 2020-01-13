@@ -169,3 +169,20 @@ OrderedDiot
    diot_of_order.d = 3
 
    list(diot_of_order.keys()) == ['c', 'a', 'd']
+
+   # insertion allowed for OrderedDiot
+   od = OrderedDiot()
+   od.insert(0, "c", "d")
+   od.insert(None, "x", "y")
+   od.insert_before('c', "e", "f")
+   od.insert_after("a", ("g", "h"))
+
+   od2 = OrderedDiot()
+   od2.a1 = 'b1'
+   od2.c1 = 'd1'
+   od.insert(-1, od2)
+
+   od3 = OrderedDiot()
+   od3.a2 = 'b2'
+   od3.c2 = 'd2'
+   od.insert_before('c', od3)
