@@ -256,4 +256,18 @@ def test_ordereddiot_insert():
 	with pytest.raises(ValueError):
 		od.insert_after('a', ('m', 2), 1)
 
+def test_od_iter():
+    od = OrderedDiot([("b", 1), ("a", 2)])
+    assert list(od) == ["b", "a"]
+
+    it = iter(od)
+    assert next(it) == "b"
+    assert next(it) == "a"
+
+    od._diot_orderedkeys = ["a", "b"]
+    assert list(od) == ["a", "b"]
+
+    it = iter(od)
+    assert next(it) == "a"
+    assert next(it) == "b"
 

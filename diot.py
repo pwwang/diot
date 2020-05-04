@@ -242,7 +242,7 @@ class Diot(dict):
         self._diot_keymaps.clear()
 
     def copy(self):
-        return self.__class__(self.items(),
+        return self.__class__(list(self.items()),
                               diot_nest=self._diot_nest,
                               diot_transform=self._diot_transform)
 
@@ -413,6 +413,9 @@ class OrderedDiot(Diot):
 
     def keys(self):
         return (key for key in self._diot_orderedkeys)
+
+    def __iter__(self):
+        return iter(self.keys())
 
     def values(self):
         return (self[key] for key in self._diot_orderedkeys)
