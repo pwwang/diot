@@ -271,3 +271,25 @@ def test_od_iter():
     assert next(it) == "a"
     assert next(it) == "b"
 
+def test_or_ior():
+	a = Diot({'data': 2, 'count': 5})
+	b = Diot(data=2, count=5)
+
+	c = a | {'data': 3}
+	assert c == {'data': 3, 'count': 5}
+
+	c = a | [('data', 3)]
+	assert c == {'data': 3, 'count': 5}
+
+	a |= {'data': 3}
+	assert a == {'data': 3, 'count': 5}
+
+	with pytest.raises(TypeError):
+		a | 1
+
+	od = OrderedDiot([("b", 1), ("a", 2)])
+	od |= {'a': 1, 'b': 2}
+
+	assert od._diot_orderedkeys == ["b", "a"]
+	assert od.a == 1
+	assert od.b == 2

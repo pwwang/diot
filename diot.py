@@ -190,6 +190,15 @@ class Diot(dict):
             else:
                 self[key].update(val)
 
+    def __or__(self, other):
+        ret = self.copy()
+        ret.update(other)
+        return ret
+
+    def __ior__(self, other):
+        self.update(other)
+        return self
+
     def __delitem__(self, name):
         if name in self._diot_keymaps:
             super().__delitem__(self._diot_keymaps[name])
