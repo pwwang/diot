@@ -100,18 +100,30 @@ def _dict(value):
 
 class Diot(dict):
     """Dictionary with dot notation"""
+    def __new__(cls, *args, **kwargs):
+        ret = super().__new__(cls)
+        # unpickling will not call __init__
+        # we use a flag '__inited__' to tell if __init__ has been called
+        # is there a better way?
+        ret.__init__(*args, **kwargs)
+        return ret
+
     def __init__(self, *args, **kwargs):
+        if self.__dict__.get('__inited__'):
+            return
+
+        self.__dict__['__inited__'] = True
         self._diot_keymaps = {}
         self._diot_nest = kwargs.pop('diot_nest', True)
-        self._diot_nest = [dict, list, tuple] \
-                          if self._diot_nest is True \
-                          else [] \
-                          if self._diot_nest is False \
-                          else list(self._diot_nest) \
-                          if isinstance(self._diot_nest, tuple) \
-                          else self._diot_nest \
-                          if isinstance(self._diot_nest, list) \
-                          else [self._diot_nest]
+        self._diot_nest = ([dict, list, tuple]
+                           if self._diot_nest is True
+                           else []
+                           if self._diot_nest is False
+                           else list(self._diot_nest)
+                           if isinstance(self._diot_nest, tuple)
+                           else self._diot_nest
+                           if isinstance(self._diot_nest, list)
+                           else [self._diot_nest])
         self._diot_transform = kwargs.pop('diot_transform', 'safe')
         if isinstance(self._diot_transform, str):
             self._diot_transform = TRANSFORMS[self._diot_transform]
@@ -210,16 +222,16 @@ class Diot(dict):
     __delattr__ = __delitem__
 
     def __repr__(self):
-        idot_transform = self._diot_transform
+        diot_transform = self._diot_transform
         for key, val in TRANSFORMS.items():
-            if val == idot_transform:
-                idot_transform = key
+            if val == diot_transform:
+                diot_transform = key
                 break
         return '{}({}, diot_nest = [{}], diot_transform = {!r})'.format(
             self.__class__.__name__,
             list(self.items()),
             ', '.join(dn.__name__ for dn in self._diot_nest),
-            idot_transform
+            diot_transform
         )
 
     def __str__(self):
@@ -265,6 +277,15 @@ class Diot(dict):
         for key, value in self.items():
             out[key] = deepcopy(value, memo)
         return out
+
+    # for pickling and unpickling
+    def __getstate__(self):
+        return {}
+
+    def __getnewargs_ex__(self):
+        return ((list(self.items()), ),
+                {'diot_transform': self._diot_transform,
+                 'diot_nest': self._diot_nest})
 
     def to_dict(self):
         """

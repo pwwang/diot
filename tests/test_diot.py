@@ -293,3 +293,17 @@ def test_or_ior():
 	assert od._diot_orderedkeys == ["b", "a"]
 	assert od.a == 1
 	assert od.b == 2
+
+def tform(key):
+	return key*2
+
+def test_pickle():
+	from pickle import loads, dumps
+
+	a = Diot(a=1, diot_transform=tform)
+	assert a.a == 1
+	assert a.aa == 1
+	pickled = dumps(a)
+	b = loads(pickled)
+	assert a.a == 1
+	assert a.aa == 1
