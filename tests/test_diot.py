@@ -307,3 +307,29 @@ def test_pickle():
 	b = loads(pickled)
 	assert a.a == 1
 	assert a.aa == 1
+
+def test_from_namespace():
+	class Namespace:
+		def __init__(self):
+			self.a = 1
+			self.b = 2
+	ns = Namespace()
+	d = Diot.from_namespace(ns)
+	assert len(d) == 2
+	assert d.a == 1
+	assert d.b == 2
+	# recursive
+	ns.c = Namespace()
+	d2 = Diot.from_namespace(ns, recursive=True)
+	assert len(d2) == 3
+	assert isinstance(d2.c, Diot)
+
+	d3 = Diot.from_namespace(ns, recursive=False)
+	assert isinstance(d3.c, Namespace)
+
+def test_keywords():
+
+	d = Diot(a=1, get=2)
+	assert d.a == 1
+	assert d['get'] == 2
+	assert callable(d.get)

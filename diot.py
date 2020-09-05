@@ -108,6 +108,19 @@ class Diot(dict):
         ret.__init__(*args, **kwargs)
         return ret
 
+    @classmethod
+    def from_namespace(cls, namespace, recursive=True):
+        """Get a Diot object from a namespace"""
+        ret = cls({key: val
+                   for key, val in vars(namespace).items()
+                   if not key.startswith('__')})
+        if not recursive:
+            return ret
+        for key, value in ret.items():
+            if isinstance(value, namespace.__class__):
+                ret[key] = cls.from_namespace(value)
+        return ret
+
     def __init__(self, *args, **kwargs):
         if self.__dict__.get('__inited__'):
             return
