@@ -6,6 +6,8 @@ import keyword
 from copy import deepcopy
 import inflection
 
+__version__ = "0.0.10"
+
 def safe_transform(item):
     """
     Transform an arbitrary key into a safe key for dot notation

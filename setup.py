@@ -21,7 +21,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='diot',
-    version='0.0.9',
+    version='0.0.10',
     description='Python dictionary with dot notation.',
     python_requires='==3.*,>=3.6.0',
     project_urls={
