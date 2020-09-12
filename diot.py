@@ -488,5 +488,5 @@ class OrderedDiot(Diot):
     def copy(self):
         ret = super().copy()
         # pylint: disable=protected-access
-        ret._diot_orderedkeys = self._diot_orderedkeys
+        ret._diot_orderedkeys = self._diot_orderedkeys[:]
         return ret

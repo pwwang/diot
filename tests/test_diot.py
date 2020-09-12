@@ -333,3 +333,14 @@ def test_keywords():
 	assert d.a == 1
 	assert d['get'] == 2
 	assert callable(d.get)
+
+def test_od_copy():
+
+	od = OrderedDiot()
+	od.i = 0
+	od2 = od.copy()
+	assert od2.i == 0
+	od2.j = 1
+
+	od3 = od.copy()
+	assert 'j' not in od3
