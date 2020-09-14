@@ -6,7 +6,7 @@ import keyword
 from copy import deepcopy
 import inflection
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 def safe_transform(item):
     """
@@ -239,7 +239,7 @@ class Diot(dict):
     def __repr__(self):
         diot_transform = self._diot_transform
         for key, val in TRANSFORMS.items():
-            if val == diot_transform:
+            if val is diot_transform:
                 diot_transform = key
                 break
         return '{}({}, diot_nest = [{}], diot_transform = {!r})'.format(
