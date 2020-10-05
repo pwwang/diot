@@ -1,6 +1,8 @@
 """diot module"""
 from os import PathLike
-from typing import Any, Callable, Dict, Iterable, Iterator, Optional, Tuple, Union
+from typing import (
+    Any, Callable, Dict, Iterable, Iterator, Optional, Tuple, Union
+)
 from copy import deepcopy
 from argparse import Namespace
 from .transforms import TRANSFORMS
@@ -159,8 +161,8 @@ class Diot(dict):
             transformed_key = self.__diot__['transform'](key)
             if transformed_key in self.__diot__['keymaps']:
                 raise KeyError(
-                    f"Keys {self.__diot__['keymaps'][transformed_key]!r} and {key!r}"
-                    " will be transformed to the same attribute. "
+                    f"Keys {self.__diot__['keymaps'][transformed_key]!r} and "
+                    f"{key!r} will be transformed to the same attribute. "
                     "Either change one of them or use a different "
                     "diot_transform function."
                 )
@@ -715,14 +717,18 @@ class OrderedDiot(Diot):
     def __delitem__(self, name: str) -> None:
         super().__delitem__(name)
         name = self.__diot__['keymaps'].get(name, name)
-        del self.__diot__['orderedkeys'][self.__diot__['orderedkeys'].index(name)]
+        del self.__diot__['orderedkeys'][
+            self.__diot__['orderedkeys'].index(name)
+        ]
 
     __delattr__ = __delitem__
 
     def pop(self, name: str, *value) -> Any:
         ret = super().pop(name, *value)
         name = self.__diot__['keymaps'].get(name, name)
-        del self.__diot__['orderedkeys'][self.__diot__['orderedkeys'].index(name)]
+        del self.__diot__['orderedkeys'][
+            self.__diot__['orderedkeys'].index(name)
+        ]
         return ret
 
     def __reversed__(self) -> Iterable[str]:
