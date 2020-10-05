@@ -56,6 +56,10 @@ movie_diot.movies.Spaceballs.stars[-1].role
 pip install diot
 ```
 
+## API
+
+https://pwwang.github.io/diot/api/diot/
+
 ## Diot
 
 Instantiated the same ways as `dict`
