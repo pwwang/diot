@@ -279,7 +279,7 @@ def test_clear():
 	bx.clear()
 	assert bx == {}
 	assert list(bx.keys()) == []
-	assert bx._diot_orderedkeys == []
+	assert bx.__diot__['orderedkeys'] == []
 
 def test_bad_recursive():
 	b = Diot()

@@ -136,4 +136,7 @@ poetry.lock
 # backup file
 *.bak
 
+# temporary notebooks by vscode in python interactive editor
+t-*.ipynb
+
 # End of https://www.gitignore.io/api/python

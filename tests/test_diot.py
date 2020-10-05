@@ -1,7 +1,9 @@
 import pytest
 from copy import deepcopy
+from argparse import Namespace
 from collections import OrderedDict
-from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot
+from diot import Diot, CamelDiot, SnakeDiot, OrderedDiot, DiotFrozenError
+from diot.diot import _nest
 
 @pytest.mark.parametrize('value, types, dest_type, expected, expectedtype', [
 	({'a': 1}, [], dict, {'a': 1}, dict),
@@ -10,7 +12,7 @@ from diot import Diot, CamelDiot, SnakeDiot, _nest, OrderedDiot
 	({'a': 1}, [dict], OrderedDict, {'a': 1}, OrderedDict),
 ])
 def test_nest(value, types, dest_type, expected, expectedtype):
-	out = _nest(value, types, dest_type)
+	out = _nest(value, types, dest_type, True)
 	assert out == expected
 	assert type(out) == expectedtype
 
@@ -35,7 +37,7 @@ def test_safe():
 	with pytest.raises(KeyError):
 		diot['a_@b'] = 1
 
-	assert diot._diot_keymaps == {'a__b': 'a__b', 'a_b': 'a_b', 'a__c': 'a_@_c'}
+	assert diot.__diot__['keymaps'] == {'a__b': 'a__b', 'a_b': 'a_b', 'a__c': 'a_@_c'}
 
 	diot = Diot(a = {'b': {'c': 1}, 'd': ({'e':2}, {'f':3}), 'g': lambda:True}, diot_nest = True, diot_transform = 'safe')
 	assert diot.a.b.c == 1
@@ -264,7 +266,7 @@ def test_od_iter():
     assert next(it) == "b"
     assert next(it) == "a"
 
-    od._diot_orderedkeys = ["a", "b"]
+    od.__diot__['orderedkeys'] = ["a", "b"]
     assert list(od) == ["a", "b"]
 
     it = iter(od)
@@ -290,7 +292,7 @@ def test_or_ior():
 	od = OrderedDiot([("b", 1), ("a", 2)])
 	od |= {'a': 1, 'b': 2}
 
-	assert od._diot_orderedkeys == ["b", "a"]
+	assert od.__diot__['orderedkeys'] == ["b", "a"]
 	assert od.a == 1
 	assert od.b == 2
 
@@ -309,11 +311,7 @@ def test_pickle():
 	assert a.aa == 1
 
 def test_from_namespace():
-	class Namespace:
-		def __init__(self):
-			self.a = 1
-			self.b = 2
-	ns = Namespace()
+	ns = Namespace(a=1, b=2)
 	d = Diot.from_namespace(ns)
 	assert len(d) == 2
 	assert d.a == 1
@@ -344,3 +342,63 @@ def test_od_copy():
 
 	od3 = od.copy()
 	assert 'j' not in od3
+
+def test_frozen_modify():
+    d = Diot(a=1, b=2, diot_frozen=True)
+    with pytest.raises(DiotFrozenError):
+    	d.a = 2
+
+    with pytest.raises(DiotFrozenError):
+        d['a'] = 2
+
+    with pytest.raises(DiotFrozenError):
+        d.pop('a')
+
+    with pytest.raises(DiotFrozenError):
+        d.popitem()
+
+    with pytest.raises(DiotFrozenError):
+        d.update({})
+
+    with pytest.raises(DiotFrozenError):
+        d |= {}
+
+    with pytest.raises(DiotFrozenError):
+        del d['item']
+
+    with pytest.raises(DiotFrozenError):
+        d.setdefault('c', 3)
+
+    with pytest.raises(DiotFrozenError):
+        d.clear()
+
+    d2 = d.copy()
+    with pytest.raises(DiotFrozenError):
+        d2.clear()
+
+    d2.unfreeze()
+    d2.c = 3
+    assert d2.c == 3
+
+    d2.freeze()
+    with pytest.raises(DiotFrozenError):
+        d2.d = 4
+
+def test_cameldiot_repr():
+    d = CamelDiot(a_b=1)
+    assert d.aB == 1
+    assert repr(d) == "CamelDiot([('a_b', 1)], diot_nest=[dict,list,tuple], diot_frozen=False)"
+
+def test_unfreeze_recursive():
+    d = Diot({'a': {'b': 1}})
+    d.freeze(True)
+    d.unfreeze()
+    d.c = 2
+    assert d.a == {'b': 1}
+    assert d.c == 2
+
+    with pytest.raises(DiotFrozenError):
+        d.a.x = 1
+
+    d.unfreeze(True)
+    d.a.x = 1
