@@ -3,7 +3,7 @@ from copy import deepcopy
 from argparse import Namespace
 from collections import OrderedDict
 from diot import Diot, CamelDiot, SnakeDiot, OrderedDiot, DiotFrozenError
-from diot.diot import _nest
+from diot.diot import FrozenDiot, _nest
 
 @pytest.mark.parametrize('value, types, dest_type, expected, expectedtype', [
 	({'a': 1}, [], dict, {'a': 1}, dict),
@@ -387,7 +387,17 @@ def test_frozen_modify():
 def test_cameldiot_repr():
     d = CamelDiot(a_b=1)
     assert d.aB == 1
-    assert repr(d) == "CamelDiot([('a_b', 1)], diot_nest=[dict,list,tuple], diot_frozen=False)"
+    assert repr(d) == "CamelDiot({'a_b': 1})"
+
+def test_snakediot_repr():
+    d = SnakeDiot(aB=1)
+    assert d.a_b == 1
+    assert repr(d) == "SnakeDiot({'aB': 1})"
+
+def test_ordereddiot_repr():
+    d = OrderedDiot(a_b=1)
+    assert d.a_b == 1
+    assert repr(d) == "OrderedDiot([('a_b', 1)])"
 
 def test_unfreeze_recursive():
     d = Diot({'a': {'b': 1}})
@@ -402,3 +412,9 @@ def test_unfreeze_recursive():
 
     d.unfreeze(True)
     d.a.x = 1
+
+def test_frozen_diot():
+    d = FrozenDiot(a=1, b=2)
+    with pytest.raises(DiotFrozenError):
+        d.c = 3
+    assert repr(d) == "FrozenDiot({'a': 1, 'b': 2})"

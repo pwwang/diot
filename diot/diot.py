@@ -302,20 +302,36 @@ class Diot(dict):
 
     __delattr__ = __delitem__
 
-    def __repr__(self) -> str:
+    def _repr(self, hide=None, items='dict'):
+        """Compose the repr for the object. If the config item is default, hide
+        it. If argument hide is specified, hide that item anyway"""
+        diot_class = self.__class__.__name__
         diot_transform = self.__diot__['transform']
         for key, val in TRANSFORMS.items():
             if val is diot_transform:
                 diot_transform = key
                 break
-        return ('{}({}, diot_nest=[{}], diot_transform={!r}, '
-                'diot_frozen={!r})').format(
-                    self.__class__.__name__,
-                    list(self.items()),
-                    ','.join(dn.__name__ for dn in self.__diot__['nest']),
-                    diot_transform,
-                    self.__diot__['frozen']
-                )
+        diot_transform = (None
+                          if diot_transform == 'safe' or hide == 'transform'
+                          else diot_transform)
+        diot_transform = ('' if diot_transform is None else
+                          f', diot_transform={diot_transform}')
+        diot_nest = ','.join(sorted(dn.__name__
+                                    for dn in self.__diot__['nest']))
+        diot_nest = (None if diot_nest == 'dict,list,tuple' or hide == 'next'
+                     else diot_nest)
+        diot_nest = '' if diot_nest is None else f', diot_nest={diot_nest}'
+        diot_frozen = (None
+                       if self.__diot__['frozen'] is False or hide == 'frozen'
+                       else self.__diot__['frozen'])
+        diot_frozen = ('' if diot_frozen is None
+                       else f', diot_frozen={diot_frozen}')
+        diot_items = self if items == 'dict' else list(self.items())
+        return (f'{diot_class}({diot_items}'
+                f'{diot_transform}{diot_nest}{diot_frozen})')
+
+    def __repr__(self) -> str:
+        return self._repr()
 
     def __str__(self) -> str:
         return repr(dict(self))
@@ -558,12 +574,7 @@ class CamelDiot(Diot):
         super().__init__(*args, **kwargs)
 
     def __repr__(self) -> str:
-        return '{}({}, diot_nest=[{}], diot_frozen={!r})'.format(
-            self.__class__.__name__,
-            list(self.items()),
-            ','.join(dn.__name__ for dn in self.__diot__['nest']),
-            self.__diot__['frozen']
-        )
+        return self._repr(hide='transform')
 
 class SnakeDiot(Diot):
     """With snake case conversion"""
@@ -571,7 +582,17 @@ class SnakeDiot(Diot):
         kwargs['diot_transform'] = TRANSFORMS['snake_case']
         super().__init__(*args, **kwargs)
 
-    __repr__ = CamelDiot.__repr__
+    def __repr__(self) -> str:
+        return self._repr(hide='transform')
+
+class FrozenDiot(Diot):
+    """The frozen diot"""
+    def __init__(self, *args, **kwargs):
+        kwargs['diot_frozen'] = True
+        super().__init__(*args, **kwargs)
+
+    def __repr__(self) -> str:
+        return self._repr(hide='frozen')
 
 class OrderedDiot(Diot):
     """With key order preserved"""
@@ -584,6 +605,9 @@ class OrderedDiot(Diot):
             key for key in kwargs if not key.startswith('diot_')
         ]
         super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        return self._repr(items='items')
 
     def __setitem__(self, name: str, value: Any) -> None:
         super().__setitem__(name, value)

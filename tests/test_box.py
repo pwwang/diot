@@ -30,7 +30,7 @@ def test_box():
 	assert 'TEST_KEY' not in bx
 	assert isinstance(bx['Key 2'].Key4, Diot)
 	assert "'key1': 'value1'" in str(bx)
-	assert repr(bx).startswith("Diot([")
+	assert repr(bx).startswith("Diot({")
 
 	bx3 = Diot(a=4)
 	setattr(bx3, 'key', 2)
