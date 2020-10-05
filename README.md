@@ -1,12 +1,8 @@
 ![Logo](https://raw.githubusercontent.com/pwwang/diot/master/logo.png)
 
-[![pypi][1]][2] [![tag][3]][4] [![travis][5]][6] [![codacy quality][7]][8] [![codacy quality][9]][8] ![pyver][10]
+[![pypi][1]][2] [![tag][3]][4] [![codacy quality][7]][8] [![coverage][9]][8] ![pyver][10] ![building][6] ![docs][5]
 
-Python dictionary with dot notation
-
-- Partially compartible with `python-box`
-- Issue #87 of `python-box` fixed
-- Customization of key conversion
+Python dictionary with dot notation (A re-implementation of [python-box](https://github.com/cdgriffith/Box) with some issues fixed and simplified)
 
 ```python
 from diot import Diot
@@ -153,8 +149,8 @@ od.insert_before('c', od3)
 [2]: https://pypi.org/project/diot/
 [3]: https://img.shields.io/github/tag/pwwang/diot?style=flat-square
 [4]: https://github.com/pwwang/diot
-[5]: https://img.shields.io/travis/pwwang/diot?style=flat-square
-[6]: https://travis-ci.org/pwwang/diot
+[5]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20Docs?label=docs&style=flat-square
+[6]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20and%20Deploy?style=flat-square
 [7]: https://img.shields.io/codacy/grade/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
 [8]: https://app.codacy.com/project/pwwang/diot/dashboard
 [9]: https://img.shields.io/codacy/coverage/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
