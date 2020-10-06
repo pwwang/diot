@@ -14,29 +14,28 @@
    :target: https://img.shields.io/github/tag/pwwang/diot?style=flat-square
    :alt: tag
  <https://github.com/pwwang/diot>`_ `
-.. image:: https://img.shields.io/travis/pwwang/diot?style=flat-square
-   :target: https://img.shields.io/travis/pwwang/diot?style=flat-square
-   :alt: travis
- <https://travis-ci.org/pwwang/diot>`_ `
 .. image:: https://img.shields.io/codacy/grade/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
    :target: https://img.shields.io/codacy/grade/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
    :alt: codacy quality
  <https://app.codacy.com/project/pwwang/diot/dashboard>`_ `
 .. image:: https://img.shields.io/codacy/coverage/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
    :target: https://img.shields.io/codacy/coverage/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
-   :alt: codacy quality
+   :alt: coverage
  <https://app.codacy.com/project/pwwang/diot/dashboard>`_ 
 .. image:: https://img.shields.io/pypi/pyversions/diot?style=flat-square
    :target: https://img.shields.io/pypi/pyversions/diot?style=flat-square
    :alt: pyver
+ 
+.. image:: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20and%20Deploy?style=flat-square
+   :target: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20and%20Deploy?style=flat-square
+   :alt: building
+ 
+.. image:: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20Docs?label=docs&style=flat-square
+   :target: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20Docs?label=docs&style=flat-square
+   :alt: docs
 
 
-Python dictionary with dot notation
-
-
-* Partially compartible with ``python-box``
-* Issue #87 of ``python-box`` fixed
-* Customization of key conversion
+Python dictionary with dot notation (A re-implementation of `python-box <https://github.com/cdgriffith/Box>`_ with some issues fixed and simplified)
 
 .. code-block:: python
 
@@ -91,6 +90,11 @@ Install
 .. code-block:: shell
 
    pip install diot
+
+API
+---
+
+https://pwwang.github.io/diot/api/diot/
 
 Diot
 ----
