@@ -149,6 +149,16 @@ od3.c2 = 'd2'
 od.insert_before('c', od3)
 ```
 
+## FrozenDiot
+
+```python
+fd = FrozenDiot(a=1, b=3)
+fd.c = 3 # DiotFrozenError
+with fd.thaw():
+    fd.c = 3
+fd.c == 3
+```
+
 [1]: https://img.shields.io/pypi/v/diot?style=flat-square
 [2]: https://pypi.org/project/diot/
 [3]: https://img.shields.io/github/tag/pwwang/diot?style=flat-square

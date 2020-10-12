@@ -139,4 +139,6 @@ poetry.lock
 # temporary notebooks by vscode in python interactive editor
 t-*.ipynb
 
+.history/
+
 # End of https://www.gitignore.io/api/python

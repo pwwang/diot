@@ -3,6 +3,7 @@ from os import PathLike
 from typing import (
     Any, Callable, Dict, Iterable, Iterator, Optional, Tuple, Union
 )
+from contextlib import contextmanager
 from copy import deepcopy
 from argparse import Namespace
 from .transforms import TRANSFORMS
@@ -362,6 +363,20 @@ class Diot(dict):
             for val in self.values():
                 if isinstance(val, Diot):
                     val.unfreeze(True)
+
+    @contextmanager
+    def thaw(self, recursive: bool = False):
+        """A context manager for temporarily change the diot
+
+        Args:
+            recursive: Whether unfreeze all diot objects recursively
+
+        Yields:
+            self, the reference to this diot.
+        """
+        self.unfreeze(recursive)
+        yield self
+        self.freeze(recursive or 'shallow')
 
     def setdefault(self, name: str, value: Any) -> Any:
         """Set a default value to a key

@@ -190,3 +190,14 @@ OrderedDiot
    od3.a2 = 'b2'
    od3.c2 = 'd2'
    od.insert_before('c', od3)
+
+FrozenDiot
+----------
+
+.. code-block:: python
+
+   fd = FrozenDiot(a=1, b=3)
+   fd.c = 3 # DiotFrozenError
+   with fd.thaw():
+       fd.c = 3
+   fd.c == 3
