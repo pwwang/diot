@@ -11,6 +11,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/pwwang/diot"
 repository = "https://github.com/pwwang/diot"
+include = ["tests/"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
