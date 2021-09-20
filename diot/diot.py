@@ -189,7 +189,13 @@ class Diot(dict):
     def __setitem__(self, name: str, value: Any) -> None:
         if self.__diot__['frozen']:
             raise DiotFrozenError('Cannot set item to a frozen diot.')
+
         transformed_key = self.__diot__['transform'](name)
+        if (
+            transformed_key in self.__diot__["keymaps"]
+            and value is self[transformed_key]
+        ):
+            return
         if (transformed_key in self.__diot__['keymaps'] and
                 transformed_key != name and
                 self.__diot__['keymaps'][transformed_key] != name):
