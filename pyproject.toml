@@ -21,3 +21,23 @@ pytest = "*"
 pytest-cov = "*"
 pyyaml = "*"
 toml = "*"
+
+[tool.mypy]
+ignore_missing_imports = true
+allow_redefinition = true
+disable_error_code = ["attr-defined", "no-redef", "union-attr"]
+show_error_codes = true
+strict_optional = false
+
+[tool.pytest.ini_options]
+addopts = "-vv --cov-config=.coveragerc --cov=diot --cov-report xml:.coverage.xml --cov-report term-missing"
+filterwarnings = [
+    #"error"
+]
+console_output_style = "progress"
+junit_family = "xunit1"
+
+[tool.black]
+line-length = 79
+target-version = ['py37', 'py38', 'py39']
+include = '\.pyi?$'

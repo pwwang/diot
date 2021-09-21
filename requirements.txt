@@ -1,5 +1,0 @@
-inflection==0.*
-pytest
-pytest-cov
-pyyaml
-toml
