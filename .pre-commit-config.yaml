@@ -19,10 +19,10 @@ repos:
         args:
             - get_ver() { echo $(egrep "^__version|^version" $1 | cut -d= -f2 | sed 's/\"\| //g'); };
               v1=`get_ver pyproject.toml`;
-              v2=`get_ver pyparam/__init__.py`;
+              v2=`get_ver diot/__init__.py`;
               if [[ $v1 == $v2 ]]; then exit 0; else exit 1; fi
         pass_filenames: false
-        files: ^pyproject\.toml|pyparam/__init__\.py$
+        files: ^pyproject\.toml|diot/__init__\.py$
     -   id: pytest
         name: Run pytest
         entry: pytest
@@ -34,6 +34,6 @@ repos:
         name: Run flake8
         entry: flake8
         language: system
-        args: [pyparam]
+        args: [diot]
         pass_filenames: false
-        files: ^pyparam/.+$
+        files: ^diot/.+$

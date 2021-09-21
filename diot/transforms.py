@@ -8,6 +8,7 @@ import re
 import keyword
 import inflection
 
+
 def safe_transform(item: str) -> str:
     """
     Transform an arbitrary key into a safe key for dot notation
@@ -34,6 +35,7 @@ def safe_transform(item: str) -> str:
     return ('_' + item
             if item[0] in '0123456789' or item in keyword.kwlist
             else item)
+
 
 def camel_case(item: str) -> str:
     """Transform item to camel case format
@@ -74,6 +76,7 @@ def snake_case(item: str) -> str:
     item = safe_transform(item)
     return inflection.underscore(item)
 
+
 def upper_case(item: str) -> str:
     """Transform item to upper case
 
@@ -93,6 +96,7 @@ def upper_case(item: str) -> str:
     item = safe_transform(item)
     return item.upper()
 
+
 def lower_case(item: str) -> str:
     """Transform item to lower case
 
@@ -111,6 +115,7 @@ def lower_case(item: str) -> str:
     """
     item = safe_transform(item)
     return item.lower()
+
 
 TRANSFORMS: Dict[str, Callable[[str], str]] = dict(
     safe=safe_transform,
