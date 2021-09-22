@@ -3,7 +3,7 @@ from copy import deepcopy
 from argparse import Namespace
 from collections import OrderedDict
 from diot import Diot, CamelDiot, SnakeDiot, OrderedDiot, DiotFrozenError
-from diot.diot import FrozenDiot, _nest
+from diot.diot import FrozenDiot, nest
 
 @pytest.mark.parametrize('value, types, dest_type, expected, expectedtype', [
     ({'a': 1}, [], dict, {'a': 1}, dict),
@@ -12,7 +12,7 @@ from diot.diot import FrozenDiot, _nest
     ({'a': 1}, [dict], OrderedDict, {'a': 1}, OrderedDict),
 ])
 def test_nest(value, types, dest_type, expected, expectedtype):
-    out = _nest(value, types, dest_type, True)
+    out = nest(value, types, dest_type, True)
     assert out == expected
     assert type(out) == expectedtype
 

@@ -1,87 +1,53 @@
 """diot module"""
+
+from contextlib import contextmanager
+from copy import deepcopy
 from os import PathLike
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
     Iterable,
     Iterator,
+    Mapping,
     Optional,
     Tuple,
     Union,
 )
-from contextlib import contextmanager
-from copy import deepcopy
-from argparse import Namespace
+
 from .transforms import TRANSFORMS
+from .utils import DiotFrozenError, nest, to_dict
 
-
-class DiotFrozenError(Exception):
-    """When try to modify a frozen diot"""
-
-
-def _nest(
-    value: Any, types: Union[type], dest_type: type, frozen: bool
-) -> Any:
-    """Convert values with certain types recursively"""
-    # nothing to convert
-    if not types or not isinstance(value, tuple(types)):
-        return value
-
-    if (list in types and isinstance(value, list)) or (
-        tuple in types and isinstance(value, tuple)
-    ):
-        # use value.__class__ to keep user-subclassed list or tuple
-        return value.__class__(
-            [_nest(val, types, dest_type, frozen) for val in value]
-        )
-
-    if dict in types and isinstance(value, dict):
-        return dest_type(
-            [
-                (key, _nest(val, types, dest_type, frozen))
-                for key, val in value.items()
-            ]
-        )
-    return value
-
-
-def _dict(value: "Diot") -> dict:
-    """Convert converted Diot objects back to dict"""
-    if isinstance(value, dict):
-        return {key: _dict(val) for key, val in value.items()}
-    if isinstance(value, tuple):
-        return tuple((_dict(val) for val in value))
-    if isinstance(value, list):
-        return [_dict(val) for val in value]
-    return value
+if TYPE_CHECKING:
+    from argparse import Namespace
 
 
 class Diot(dict):
     """Dictionary with dot notation
 
     Examples:
-    >>> d = Diot(a=1, b=2)
-    >>> d.a = 2
-    >>> d['a'] = 2
-    >>> d.a        # 2
-    >>> d['a']     # 2
-    >>> d.pop('a') # 2
-    >>> d.pop('x', 1) # 1
-    >>> d.popitem()   # ('b', 2)
-    >>> d.update(a=3, b=4)    # {'a': 3, 'b': 4}
-    >>> d | {'a': 1, 'b': 2}  # {'a': 1, 'b': 2} (d unchanged)
-    >>> d |= {'a': 1, 'b': 2} # d == {'a': 1, 'b': 2}
-    >>> del d.a
-    >>> del d['b']
-    >>> d.freeze()
-    >>> d.a = 1  # DiotFrozenError
-    >>> d.unfreeze()
-    >>> d.a = 1  # ok
-    >>> d.setdefault('b', 2)
-    >>> 'b' in d
-    >>> d.copy()
-    >>> d.deepcopy()
+        >>> d = Diot(a=1, b=2)
+        >>> d.a = 2
+        >>> d['a'] = 2
+        >>> d.a        # 2
+        >>> d['a']     # 2
+        >>> d.pop('a') # 2
+        >>> d.pop('x', 1) # 1
+        >>> d.popitem()   # ('b', 2)
+        >>> d.update(a=3, b=4)    # {'a': 3, 'b': 4}
+        >>> d | {'a': 1, 'b': 2}  # {'a': 1, 'b': 2} (d unchanged)
+        >>> d |= {'a': 1, 'b': 2} # d == {'a': 1, 'b': 2}
+        >>> del d.a
+        >>> del d['b']
+        >>> d.freeze()
+        >>> d.a = 1  # DiotFrozenError
+        >>> d.unfreeze()
+        >>> d.a = 1  # ok
+        >>> d.setdefault('b', 2)
+        >>> 'b' in d
+        >>> d.copy()
+        >>> d.deepcopy()
 
     Args:
         *args: Anything that can be sent to dict construct
@@ -110,7 +76,7 @@ class Diot(dict):
     @classmethod
     def from_namespace(
         cls,
-        namespace: Namespace,
+        namespace: "Namespace",
         recursive: bool = True,
         diot_nest: Union[bool, Iterable[type]] = True,
         diot_transform: Union[Callable[[str], str], str] = "safe",
@@ -135,6 +101,8 @@ class Diot(dict):
         Returns:
             The converted diot object.
         """
+        from argparse import Namespace
+
         ret = cls(
             {
                 key: val
@@ -193,7 +161,7 @@ class Diot(dict):
 
         # nest values
         for key in self:
-            self[key] = _nest(
+            self[key] = nest(
                 self[key],
                 self.__diot__["nest"],
                 self.__class__,
@@ -205,7 +173,7 @@ class Diot(dict):
     def __setattr__(self, name: str, value: Any) -> None:
         if self.__diot__["frozen"]:
             raise DiotFrozenError("Cannot set attribute to a frozen diot.")
-        self[name] = _nest(
+        self[name] = nest(
             value,
             self.__diot__["nest"],
             self.__class__,
@@ -232,7 +200,7 @@ class Diot(dict):
         self.__diot__["keymaps"][transformed_key] = name
         super().__setitem__(
             name,
-            _nest(
+            nest(
                 value,
                 self.__diot__["nest"],
                 self.__class__,
@@ -312,7 +280,7 @@ class Diot(dict):
                 or not isinstance(self[key], dict)
                 or not isinstance(val, dict)
             ):
-                self[key] = _nest(
+                self[key] = nest(
                     val,
                     self.__diot__["nest"],
                     self.__class__,
@@ -321,12 +289,12 @@ class Diot(dict):
             else:
                 self[key].update(val)
 
-    def __or__(self, other: Dict[str, Any]) -> "Diot":
+    def __or__(self, other: Mapping) -> "Diot":
         ret = self.copy()
         ret.update(other)
         return ret
 
-    def __ior__(self, other: Dict[str, Any]) -> "Diot":
+    def __ior__(self, other: Mapping) -> "Diot":
         self.update(other)
         return self
 
@@ -431,7 +399,11 @@ class Diot(dict):
         yield self
         self.freeze(recursive or "shallow")
 
-    def setdefault(self, name: str, value: Any) -> Any:
+    def setdefault(  # type: ignore[override]
+        self,
+        name: str,
+        value: Any,
+    ) -> Any:
         """Set a default value to a key
 
         Args:
@@ -473,7 +445,7 @@ class Diot(dict):
         name = self.__diot__["keymaps"].get(name, name)
         return super().get(
             name,
-            _nest(
+            nest(
                 value,
                 self.__diot__["nest"],
                 self.__class__,
@@ -481,7 +453,7 @@ class Diot(dict):
             ),
         )
 
-    def __contains__(self, name: str) -> bool:
+    def __contains__(self, name: Any) -> bool:
         if name in self.__diot__["keymaps"]:
             return True
         return super().__contains__(name)
@@ -542,7 +514,7 @@ class Diot(dict):
         Returns:
             The converted python dictionary
         """
-        return _dict(self)
+        return to_dict(self)
 
     dict = as_dict = to_dict
 
@@ -603,7 +575,7 @@ class Diot(dict):
             The yaml string with filename is not given
         """
         try:
-            import yaml
+            import yaml  # type: ignore[import]
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
                 "You need pyyaml installed to export Diot as yaml."
@@ -643,7 +615,7 @@ class Diot(dict):
             The toml string with filename is not given
         """
         try:
-            import toml
+            import toml  # type: ignore[import]
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
                 "You need toml installed to export Diot as toml."
@@ -711,7 +683,7 @@ class OrderedDiot(Diot):
         if name not in self.__diot__["orderedkeys"]:
             self.__diot__["orderedkeys"].append(name)
 
-    def items(self) -> Iterator[Tuple[str, Any]]:
+    def items(self) -> Iterator[Tuple[str, Any]]:  # type: ignore[override]
         """Get the items in the order of the keys
 
         Returns:
@@ -816,7 +788,7 @@ class OrderedDiot(Diot):
             raise KeyError("Key already exists: %s" % name)
         self.insert(position + 1, name, value)
 
-    def keys(self) -> Iterable[str]:
+    def keys(self) -> Iterable:  # type: ignore[override]
         """Get the keys in the order they are added
 
         Returns:
@@ -824,10 +796,10 @@ class OrderedDiot(Diot):
         """
         return (key for key in self.__diot__["orderedkeys"])
 
-    def __iter__(self) -> Iterable[str]:
+    def __iter__(self) -> Iterable:  # type: ignore[override]
         return iter(self.keys())
 
-    def values(self) -> Iterable[Any]:
+    def values(self) -> Iterable:  # type: ignore[override]
         """Get the values in the order they are added
 
         Returns:
@@ -852,7 +824,7 @@ class OrderedDiot(Diot):
         ]
         return ret
 
-    def __reversed__(self) -> Iterable[str]:
+    def __reversed__(self) -> Iterable:  # type: ignore[override]
         return reversed(self.__diot__["orderedkeys"])
 
     def clear(self) -> None:
@@ -860,6 +832,6 @@ class OrderedDiot(Diot):
         del self.__diot__["orderedkeys"][:]
 
     def copy(self) -> "OrderedDiot":
-        ret = super().copy()
-        self.__diot__["orderedkeys"] = self.__diot__["orderedkeys"][:]
-        return ret
+        out = self.__class__(super().copy())
+        out.__diot__["orderedkeys"] = self.__diot__["orderedkeys"][:]
+        return out

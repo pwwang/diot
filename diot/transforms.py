@@ -10,13 +10,12 @@ import inflection
 
 
 def safe_transform(item: str) -> str:
-    """
-    Transform an arbitrary key into a safe key for dot notation
+    """Transform an arbitrary key into a safe key for dot notation
 
     Examples:
-    >>> safe_transform("a,b")   # a_b
-    >>> safe_transform("a_,_b") # a__b
-    >>> safe_transform("in")    # _in
+        >>> safe_transform("a,b")   # a_b
+        >>> safe_transform("a_,_b") # a__b
+        >>> safe_transform("in")    # _in
 
     Args:
         item: The item to be transformed
@@ -43,9 +42,9 @@ def camel_case(item: str) -> str:
     The item will be first safely-transformed.
 
     Examples:
-    >>> camel_case('one_two')   # oneTwo
-    >>> camel_case('_one')      # _one
-    >>> camel_case('o_one')     # oOne
+        >>> camel_case('one_two')   # oneTwo
+        >>> camel_case('_one')      # _one
+        >>> camel_case('o_one')     # oOne
 
     Args:
         item: The item to be transformed
@@ -63,9 +62,9 @@ def snake_case(item: str) -> str:
     The item will be first safely-transformed.
 
     Examples:
-    >>> snake_case('oneTwo')   # one_two
-    >>> snake_case('One')      # one
-    >>> snake_case('1One')     # _1_one
+        >>> snake_case('oneTwo')   # one_two
+        >>> snake_case('One')      # one
+        >>> snake_case('1One')     # _1_one
 
     Args:
         item: The item to be transformed
@@ -83,9 +82,9 @@ def upper_case(item: str) -> str:
     The item will be first safely-transformed.
 
     Examples:
-    >>> upper_case('oneTwo')   # ONETWO
-    >>> upper_case('One')      # ONE
-    >>> upper_case('1One')     # _1ONE
+        >>> upper_case('oneTwo')   # ONETWO
+        >>> upper_case('One')      # ONE
+        >>> upper_case('1One')     # _1ONE
 
     Args:
         item: The item to be transformed
@@ -103,9 +102,9 @@ def lower_case(item: str) -> str:
     The item will be first safely-transformed.
 
     Examples:
-    >>> lower_case('ONETWO')   # onetwo
-    >>> lower_case('One')      # one
-    >>> lower_case('1One')     # _1one
+        >>> lower_case('ONETWO')   # onetwo
+        >>> lower_case('One')      # one
+        >>> lower_case('1One')     # _1one
 
     Args:
         item: The item to be transformed
