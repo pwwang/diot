@@ -53,14 +53,17 @@ movie_diot.movies.Spaceballs.stars[-1].role
 
 ## Install
 ```shell
-pip install diot
+pip install -U diot
 ```
 
 ## API
 
 https://pwwang.github.io/diot/api/diot/
 
-## Diot
+
+## Usage
+
+### Diot
 
 Instantiated the same ways as `dict`
 ```python
@@ -122,7 +125,7 @@ dt = Diot(post = 10, diot_transform = inflection.pluralize)
 dt.posts == dt['posts'] == dt['post'] == 10
 ```
 
-## OrderedDiot
+### OrderedDiot
 ```python
 diot_of_order = OrderedDiot()
 diot_of_order.c = 1
@@ -149,7 +152,7 @@ od3.c2 = 'd2'
 od.insert_before('c', od3)
 ```
 
-## FrozenDiot
+### FrozenDiot
 
 ```python
 fd = FrozenDiot(a=1, b=3)
@@ -159,13 +162,29 @@ with fd.thaw():
 fd.c == 3
 ```
 
+### Missing key handler
+
+```python
+d = Diot(a=1, b=2, diot_missing=ValueError)
+d['c'] # ValueError
+d.c # AttributeError from ValueError
+
+d = Diot(a=1, b=2, diot_missing=ValueError("Custom message"))
+
+d = Diot(a=1, b=2, diot_missing=None)
+# d.c is None
+
+d = Diot(a=1, b=2, diot_missing=lambda key, diot: diot.a + diot.b)
+# d.c == 3
+```
+
 [1]: https://img.shields.io/pypi/v/diot?style=flat-square
 [2]: https://pypi.org/project/diot/
 [3]: https://img.shields.io/github/tag/pwwang/diot?style=flat-square
 [4]: https://github.com/pwwang/diot
 [5]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20Docs?label=docs&style=flat-square
 [6]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20and%20Deploy?style=flat-square
-[7]: https://img.shields.io/codacy/grade/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
-[8]: https://app.codacy.com/project/pwwang/diot/dashboard
-[9]: https://img.shields.io/codacy/coverage/f19cfbaa23d442d6ae20af66a4cf6796?style=flat-square
+[7]: https://img.shields.io/codacy/grade/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square
+[8]: https://app.codacy.com/gh/pwwang/diot/dashboard
+[9]: https://img.shields.io/codacy/coverage/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square
 [10]: https://img.shields.io/pypi/pyversions/diot?style=flat-square
