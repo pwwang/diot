@@ -37,3 +37,10 @@ repos:
         args: [diot]
         pass_filenames: false
         files: ^diot/.+$
+    -   id: mypy
+        name: Run mypy check
+        entry: mypy
+        language: system
+        args: [-p, diot]
+        pass_filenames: false
+        files: ^diot/.+$

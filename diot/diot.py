@@ -236,7 +236,7 @@ class Diot(dict):
                 missing_handler, Exception
             ):
                 raise missing_handler(str(keyerr)) from None
-            return missing_handler(name, self)
+            return missing_handler(name, self)  # type: ignore
 
     def pop(self, name: str, *value) -> Any:
         """Pop a key from the object and return the value. If key does not
