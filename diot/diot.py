@@ -94,10 +94,15 @@ class Diot(dict):
             diot_nest: Types to nestly convert values
             diot_transform: The transforms for keys
             diot_frozen: Whether to generate a frozen diot.
-                True: freeze the object recursively if there are Diot objects
+                - True: freeze the object recursively if there are Diot objects
                 in descendants
-                False: Don'f freeze
-                'shallow': Only freeze at depth = 1
+                - False: Don'f freeze
+                - `shallow`: Only freeze at depth = 1
+            diot_missing: How to deal with missing keys when accessing them
+                - An exception class or object to raise
+                - `None` to return `None`
+                - A custom function with first argument the key and second
+                    the diot object.
         Returns:
             The converted diot object.
         """
@@ -142,6 +147,7 @@ class Diot(dict):
         )
         self.__diot__["transform"] = kwargs.pop("diot_transform", "safe")
         self.__diot__["frozen"] = False
+        self.__diot__["missing"] = kwargs.pop("diot_missing", KeyError)
         diot_frozen = kwargs.pop("diot_frozen", False)
         if isinstance(self.__diot__["transform"], str):
             self.__diot__["transform"] = TRANSFORMS[self.__diot__["transform"]]
@@ -213,12 +219,24 @@ class Diot(dict):
             return self.__dict__["__diot__"]
         try:
             return self[name]
-        except KeyError:
-            raise AttributeError(name) from None
+        except Exception as exc:
+            raise AttributeError(name) from exc
 
     def __getitem__(self, name: str) -> Any:
         original_key = self.__diot__["keymaps"].get(name, name)
-        return super().__getitem__(original_key)
+        try:
+            return super().__getitem__(original_key)
+        except KeyError as keyerr:
+            missing_handler = self.__diot__["missing"]
+            if missing_handler is None:
+                return None
+            if isinstance(missing_handler, Exception):
+                raise missing_handler from None
+            if isinstance(missing_handler, type) and issubclass(
+                missing_handler, Exception
+            ):
+                raise missing_handler(str(keyerr))
+            return missing_handler(name, self)
 
     def pop(self, name: str, *value) -> Any:
         """Pop a key from the object and return the value. If key does not
