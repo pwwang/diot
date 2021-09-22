@@ -235,7 +235,7 @@ class Diot(dict):
             if isinstance(missing_handler, type) and issubclass(
                 missing_handler, Exception
             ):
-                raise missing_handler(str(keyerr))
+                raise missing_handler(str(keyerr)) from None
             return missing_handler(name, self)
 
     def pop(self, name: str, *value) -> Any:

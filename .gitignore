@@ -142,3 +142,5 @@ t-*.ipynb
 .history/
 
 # End of https://www.gitignore.io/api/python
+
+_t.py
