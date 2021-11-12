@@ -1,5 +1,5 @@
 """Utilities for diot"""
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, Iterable
 
 
 if TYPE_CHECKING:
@@ -12,7 +12,7 @@ class DiotFrozenError(Exception):
 
 def nest(
     value: Any,
-    types: Union[type],
+    types: Iterable[type],
     dest_type: type,
     frozen: bool,
 ) -> Any:
@@ -25,9 +25,11 @@ def nest(
         tuple in types and isinstance(value, tuple)  # type: ignore
     ):
         # use value.__class__ to keep user-subclassed list or tuple
-        return value.__class__(
-            [nest(val, types, dest_type, frozen) for val in value]
-        )
+        out = [nest(val, types, dest_type, frozen) for val in value]
+        try:
+            return value.__class__(out)
+        except Exception:  # pragma: no cover
+            return out
 
     if dict in types and isinstance(value, dict):  # type: ignore
         return dest_type(
