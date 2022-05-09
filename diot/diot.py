@@ -633,16 +633,16 @@ class Diot(dict):
             The toml string with filename is not given
         """
         try:
-            import toml  # type: ignore[import]
+            import rtoml  # type: ignore[import]
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
                 "You need toml installed to export Diot as toml."
             ) from exc
         toml_dump = self.to_dict()
         if not filename:
-            return toml.dumps(toml_dump)
+            return rtoml.dumps(toml_dump)
         with open(filename, "w", encoding=encoding, errors=errors) as ftml:
-            toml.dump(toml_dump, ftml)
+            rtoml.dump(toml_dump, ftml)
         return None
 
     toml = as_toml = to_toml

@@ -380,18 +380,18 @@ def test_to_yaml_file(tmp_path):
 		assert data == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
 
 
-@pytest.mark.skipif(not installed('toml'), reason = 'toml not installed.')
+@pytest.mark.skipif(not installed('rtoml'), reason = 'toml not installed.')
 def test_to_toml():
-	import toml
+	import rtoml
 	a = Diot(**test_dict)
-	assert toml.loads(a.to_toml()) == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
+	assert rtoml.loads(a.to_toml()) == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
 
-@pytest.mark.skipif(not installed('toml'), reason = 'toml not installed.')
+@pytest.mark.skipif(not installed('rtoml'), reason = 'toml not installed.')
 def test_to_toml_file(tmp_path):
-	import toml
+	import rtoml
 	a = Diot(**test_dict)
 	tmp_toml_file = tmp_path / 'diot_test_to_toml.toml'
 	a.to_toml(tmp_toml_file)
 	with open(tmp_toml_file) as f:
-		data = toml.load(f)
+		data = rtoml.load(f)
 		assert data == {key:val for key,val in test_dict.items() if key != 'diot_nest'}
