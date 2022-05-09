@@ -1,3 +1,4 @@
-mkdocs-material
-mkapi
-pymdown-extensions
+jinja2==3.0.3
+mkdocs-material==7.2.3
+mkapi-fix
+pymdown-extensions==8.2
