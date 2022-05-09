@@ -636,7 +636,7 @@ class Diot(dict):
             import rtoml  # type: ignore[import]
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
-                "You need toml installed to export Diot as toml."
+                "You need rtoml installed to export Diot as toml."
             ) from exc
         toml_dump = self.to_dict()
         if not filename:
