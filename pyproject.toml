@@ -13,14 +13,14 @@ homepage = "https://github.com/pwwang/diot"
 repository = "https://github.com/pwwang/diot"
 
 [tool.poetry.dependencies]
-python = "^3.6"
-inflection = "0.*"
+python = "^3.7"
+inflection = "^0.5"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-cov = "*"
-pyyaml = "*"
-toml = "*"
+pytest = "^7"
+pytest-cov = "^3"
+pyyaml = "^5.4"
+rtoml = "^0.7"
 
 [tool.mypy]
 ignore_missing_imports = true
