@@ -20,7 +20,7 @@ inflection = "^0.5"
 pytest = "^7"
 pytest-cov = "^3"
 pyyaml = "^5.4"
-rtoml = "^0.7"
+rtoml = "^0.8"
 
 [tool.mypy]
 ignore_missing_imports = true
