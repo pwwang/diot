@@ -182,8 +182,8 @@ d = Diot(a=1, b=2, diot_missing=lambda key, diot: diot.a + diot.b)
 [2]: https://pypi.org/project/diot/
 [3]: https://img.shields.io/github/tag/pwwang/diot?style=flat-square
 [4]: https://github.com/pwwang/diot
-[5]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20Docs?label=docs&style=flat-square
-[6]: https://img.shields.io/github/workflow/status/pwwang/diot/Build%20and%20Deploy?style=flat-square
+[5]: https://img.shields.io/github/actions/workflow/status/pwwang/diot/docs.yml?label=docs&style=flat-square
+[6]: https://img.shields.io/github/actions/workflow/status/pwwang/diot/build.yml?style=flat-square
 [7]: https://img.shields.io/codacy/grade/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square
 [8]: https://app.codacy.com/gh/pwwang/diot/dashboard
 [9]: https://img.shields.io/codacy/coverage/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square
