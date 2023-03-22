@@ -16,6 +16,9 @@ repository = "https://github.com/pwwang/diot"
 python = "^3.7"
 inflection = "^0.5"
 
+[tool.poetry.build]
+generate-setup-file = true
+
 [tool.poetry.dev-dependencies]
 pytest = "^7"
 pytest-cov = "^4"
