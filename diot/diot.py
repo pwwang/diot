@@ -837,9 +837,10 @@ class OrderedDiot(Diot):
     def pop(self, name: str, *value) -> Any:
         ret = super().pop(name, *value)
         name = self.__diot__["keymaps"].get(name, name)
-        del self.__diot__["orderedkeys"][
-            self.__diot__["orderedkeys"].index(name)
-        ]
+        if name in self.__diot__["orderedkeys"]:
+            del self.__diot__["orderedkeys"][
+                self.__diot__["orderedkeys"].index(name)
+            ]
         return ret
 
     def __reversed__(self) -> Iterable:  # type: ignore[override]

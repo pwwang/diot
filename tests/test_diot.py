@@ -119,6 +119,14 @@ def test_ordered():
     dt = OrderedDiot(OrderedDict([("b", 1), ("a", 2), ("c", 3)]))
     assert list(dt.keys()) == ["b", "a", "c"]
 
+    x = dt.pop('b')
+    assert x == 1
+    assert list(dt.keys()) == ["a", "c"]
+
+    x = dt.pop('x', 10)
+    assert x == 10
+    assert list(dt.keys()) == ["a", "c"]
+
 
 def test_upper_lower():
     dt = Diot(a=1, diot_transform="upper")
