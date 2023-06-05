@@ -32,6 +32,9 @@ def nest(
             return out
 
     if dict in types and isinstance(value, dict):  # type: ignore
+        if issubclass(value.__class__, dest_type):
+            return value
+
         return dest_type(
             [
                 (key, nest(val, types, dest_type, frozen))
