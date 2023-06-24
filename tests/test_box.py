@@ -117,8 +117,14 @@ def test_update():
 	assert isinstance(a.lister, list)
 	assert a.asdf == 'fdsa'
 	assert a.testkey == 66
-	assert a.key1.new == 5  # On regular dict update this shouldn't happen
+	# assert a.key1.new == 5  # On regular dict update this shouldn't happen
+	assert len(a.key1) == 1
 	assert a.key1.gg == 4
+
+	a.update_recursively({'key1': {'new': 5}, 'items': 1})
+	assert a.key1.new == 5
+	assert a.key1.gg == 4
+	assert a['items'] == 1
 
 	c = Diot(diot_nest=[dict])
 	c.a = [1, 2]

@@ -419,6 +419,9 @@ def test_frozen_modify():
         d.update({})
 
     with pytest.raises(DiotFrozenError):
+        d.update_recursively({})
+
+    with pytest.raises(DiotFrozenError):
         d |= {}
 
     with pytest.raises(DiotFrozenError):

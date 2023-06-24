@@ -291,6 +291,24 @@ class Diot(dict):
         """
         if self.__diot__["frozen"]:
             raise DiotFrozenError("Cannot update a frozen diot.")
+
+        dict_to_update = dict(*value, **kwargs)
+        for key, val in dict_to_update.items():
+            self[key] = nest(val, self.__diot__["nest"], type(self), False)
+
+    def update_recursively(self, *value, **kwargs) -> None:
+        """Update the object. Shortcut: `|=`
+
+        Args:
+            args: args that can be sent to dict to update the object
+            kwargs: kwargs that can be sent to dict to update the object
+
+        Raises:
+            DiotFrozenError: when try to update a frozen diot
+        """
+        if self.__diot__["frozen"]:
+            raise DiotFrozenError("Cannot update a frozen diot.")
+
         dict_to_update = dict(*value, **kwargs)
         for key, val in dict_to_update.items():
             if (
@@ -301,8 +319,8 @@ class Diot(dict):
                 self[key] = nest(
                     val,
                     self.__diot__["nest"],
-                    self.__class__,
-                    self.__diot__["frozen"] is True,
+                    type(self),
+                    False,
                 )
             else:
                 self[key].update(val)
