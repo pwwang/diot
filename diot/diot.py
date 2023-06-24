@@ -313,7 +313,7 @@ class Diot(dict):
         for key, val in dict_to_update.items():
             if (
                 key not in self
-                or not isinstance(self[key], dict)
+                or not isinstance(self[key], type(self))
                 or not isinstance(val, dict)
             ):
                 self[key] = nest(
@@ -323,7 +323,7 @@ class Diot(dict):
                     False,
                 )
             else:
-                self[key].update(val)
+                self[key].update_recursively(val)
 
     def __or__(self, other: Mapping) -> "Diot":
         ret = self.copy()
