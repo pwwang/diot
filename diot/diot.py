@@ -219,8 +219,8 @@ class Diot(dict):
             return self.__dict__["__diot__"]
         try:
             return self[name]
-        except Exception as exc:
-            raise AttributeError(name) from exc
+        except Exception:
+            raise AttributeError(name) from None
 
     def __getitem__(self, name: str) -> Any:
         original_key = self.__diot__["keymaps"].get(name, name)
@@ -612,10 +612,10 @@ class Diot(dict):
         """
         try:
             import yaml  # type: ignore[import]
-        except ImportError as exc:  # pragma: no cover
+        except ImportError:  # pragma: no cover
             raise ImportError(
                 "You need pyyaml installed to export Diot as yaml."
-            ) from exc
+            ) from None
         yaml_dump = self.to_dict()
         if not filename:
             return yaml.dump(
@@ -652,10 +652,10 @@ class Diot(dict):
         """
         try:
             import rtoml  # type: ignore[import]
-        except ImportError as exc:  # pragma: no cover
+        except ImportError:  # pragma: no cover
             raise ImportError(
                 "You need rtoml installed to export Diot as toml."
-            ) from exc
+            ) from None
         toml_dump = self.to_dict()
         if not filename:
             return rtoml.dumps(toml_dump)
@@ -795,8 +795,8 @@ class OrderedDiot(Diot):
         """
         try:
             position = self.__diot__["orderedkeys"].index(existing_key)
-        except ValueError as vex:
-            raise KeyError("No such key: %s" % existing_key) from vex
+        except ValueError:
+            raise KeyError("No such key: %s" % existing_key) from None
         if name in self.__diot__["orderedkeys"]:
             raise KeyError("Key already exists: %s" % name)
         self.insert(position, name, value)
@@ -818,8 +818,8 @@ class OrderedDiot(Diot):
         """
         try:
             position = self.__diot__["orderedkeys"].index(existing_key)
-        except ValueError as vex:
-            raise KeyError("No such key: %s" % existing_key) from vex
+        except ValueError:
+            raise KeyError("No such key: %s" % existing_key) from None
         if name in self.__diot__["orderedkeys"]:
             raise KeyError("Key already exists: %s" % name)
         self.insert(position + 1, name, value)
