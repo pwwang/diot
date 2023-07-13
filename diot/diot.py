@@ -152,7 +152,10 @@ class Diot(dict):
         if isinstance(self.__diot__["transform"], str):
             self.__diot__["transform"] = TRANSFORMS[self.__diot__["transform"]]
 
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            *(arg for arg in args if arg is not None),
+            **kwargs,
+        )
 
         for key in self:
             transformed_key = self.__diot__["transform"](key)
