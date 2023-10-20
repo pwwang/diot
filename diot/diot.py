@@ -520,11 +520,10 @@ class Diot(dict):
     __copy__ = copy
 
     def __deepcopy__(self, memo: Optional[Dict[int, Any]] = None) -> "Diot":
-        out = self.__class__(
-            diot_nest=self.__diot__["nest"],
-            diot_transform=self.__diot__["transform"],
-            diot_frozen=self.__diot__["frozen"],
-        )
+        out = self.__class__()
+        for dk, dv in self.__diot__.items():
+            out.__diot__[dk] = deepcopy(dv)
+
         memo = memo or {}
         memo[id(self)] = out
         for key, value in self.items():
