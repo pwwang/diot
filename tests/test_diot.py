@@ -9,16 +9,16 @@ from diot.diot import FrozenDiot, nest
 @pytest.mark.parametrize(
     "value, types, dest_type, expected, expectedtype",
     [
-        ({"a": 1}, [], dict, {"a": 1}, dict),
-        ({"a": 1}, [list], dict, {"a": 1}, dict),
-        ([{"a": 1}], [list], dict, [{"a": 1}], list),
-        ({"a": 1}, [dict], OrderedDict, {"a": 1}, OrderedDict),
+        ({"a": 1}, [], dict, {"a": 1}, 'dict'),
+        ({"a": 1}, [list], dict, {"a": 1}, 'dict'),
+        ([{"a": 1}], [list], dict, [{"a": 1}], 'list'),
+        ({"a": 1}, [dict], OrderedDict, {"a": 1}, 'OrderedDict'),
     ],
 )
 def test_nest(value, types, dest_type, expected, expectedtype):
     out = nest(value, types, dest_type, True)
     assert out == expected
-    assert type(out) == expectedtype
+    assert type(out).__name__ == expectedtype
 
 
 def test_safe():
@@ -119,11 +119,11 @@ def test_ordered():
     dt = OrderedDiot(OrderedDict([("b", 1), ("a", 2), ("c", 3)]))
     assert list(dt.keys()) == ["b", "a", "c"]
 
-    x = dt.pop('b')
+    x = dt.pop("b")
     assert x == 1
     assert list(dt.keys()) == ["a", "c"]
 
-    x = dt.pop('x', 10)
+    x = dt.pop("x", 10)
     assert x == 10
     assert list(dt.keys()) == ["a", "c"]
 
@@ -327,7 +327,7 @@ def test_od_iter():
 
 def test_or_ior():
     a = Diot({"data": 2, "count": 5})
-    b = Diot(data=2, count=5)
+    b = Diot(data=2, count=5)  # noqa: F841
 
     c = a | {"data": 3}
     assert c == {"data": 3, "count": 5}
@@ -360,7 +360,7 @@ def test_pickle():
     assert a.a == 1
     assert a.aa == 1
     pickled = dumps(a)
-    b = loads(pickled)
+    b = loads(pickled)  # noqa: F841
     assert a.a == 1
     assert a.aa == 1
 
