@@ -1,4 +1,5 @@
 """diot module"""
+from __future__ import annotations
 
 from contextlib import contextmanager
 from copy import deepcopy
@@ -10,7 +11,6 @@ from typing import (
     Dict,
     Iterable,
     Iterator,
-    Mapping,
     Optional,
     Tuple,
     Union,
@@ -76,12 +76,12 @@ class Diot(dict):
     @classmethod
     def from_namespace(
         cls,
-        namespace: "Namespace",
+        namespace: Namespace,
         recursive: bool = True,
         diot_nest: Union[bool, Iterable[type]] = True,
         diot_transform: Union[Callable[[str], str], str] = "safe",
         diot_frozen: Union[bool, str] = False,
-    ) -> "Diot":
+    ) -> Diot:
         """Get a Diot object from an argparse namespace
 
         Example:
@@ -328,12 +328,12 @@ class Diot(dict):
             else:
                 self[key].update_recursively(val)
 
-    def __or__(self, other: Mapping) -> "Diot":
+    def __or__(self, other: Any) -> Diot:
         ret = self.copy()
         ret.update(other)
         return ret
 
-    def __ior__(self, other: Mapping) -> "Diot":
+    def __ior__(self, other: Any) -> Diot:
         self.update(other)
         return self
 
@@ -504,7 +504,7 @@ class Diot(dict):
         super().clear()
         self.__diot__["keymaps"].clear()
 
-    def copy(self) -> "Diot":
+    def copy(self) -> Diot:
         """Shallow copy the object
 
         Returns:
@@ -519,7 +519,7 @@ class Diot(dict):
 
     __copy__ = copy
 
-    def __deepcopy__(self, memo: Optional[Dict[int, Any]] = None) -> "Diot":
+    def __deepcopy__(self, memo: Optional[Dict[int, Any]] = None) -> Diot:
         out = self.__class__()
         for dk, dv in self.__diot__.items():
             out.__diot__[dk] = deepcopy(dv)
@@ -658,7 +658,6 @@ class Diot(dict):
             raise ImportError(
                 "You need rtoml installed to export Diot as toml."
             ) from None
-
         toml_dump = self.to_dict()
         if not filename:
             return rtoml.dumps(toml_dump)
@@ -871,7 +870,7 @@ class OrderedDiot(Diot):
         super().clear()
         del self.__diot__["orderedkeys"][:]
 
-    def copy(self) -> "OrderedDiot":
+    def copy(self) -> OrderedDiot:
         out = self.__class__(super().copy())
         out.__diot__["orderedkeys"] = self.__diot__["orderedkeys"][:]
         return out
