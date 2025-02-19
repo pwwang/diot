@@ -658,6 +658,7 @@ class Diot(dict):
             raise ImportError(
                 "You need rtoml installed to export Diot as toml."
             ) from None
+
         toml_dump = self.to_dict()
         if not filename:
             return rtoml.dumps(toml_dump)
