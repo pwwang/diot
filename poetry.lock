@@ -195,7 +195,7 @@ testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "PyYAML-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0a9a2848a5b7feac301353437eb7d5957887edbf81d56e903999a75a3d743086"},
@@ -257,7 +257,7 @@ files = [
 name = "rtoml"
 version = "0.12.0"
 description = ""
-optional = false
+optional = true
 python-versions = ">=3.9"
 files = [
     {file = "rtoml-0.12.0-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:750761d30c70ffd45cd30ef8982e4c0665e76914efcc828ff4cd8450acddd328"},
@@ -367,7 +367,12 @@ files = [
     {file = "tomli-2.2.1.tar.gz", hash = "sha256:cd45e1dc79c835ce60f7404ec8119f2eb06d38b1deba146f07ced3bbc44505ff"},
 ]
 
+[extras]
+all = ["pyyaml", "rtoml", "tomli"]
+toml = ["rtoml", "tomli"]
+yaml = ["pyyaml"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "2b2bf2e2bd746fa32315678ca5082dc68381d07b429c5abab518929ae3961753"
+content-hash = "124c96249702586f08a8e885e2f64bc127d885bee9d62ca3cfcf80933c54d502"
