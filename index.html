@@ -1,0 +1,949 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-7.2.3">
+    
+    
+      
+        <title>diot</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.f7f47774.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    
+      <link rel="stylesheet" href="css/mkapi-common.css">
+    
+      <link rel="stylesheet" href="style.css">
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#box-is-a-conversion_box-by-default-pass-in-conversion_boxfalse-to-disable-that-behavior" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="diot" class="md-header__button md-logo" aria-label="diot" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            diot
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="diot" class="md-nav__button md-logo" aria-label="diot" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    diot
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        Home
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#box-is-a-conversion_box-by-default-pass-in-conversion_boxfalse-to-disable-that-behavior" class="md-nav__link">
+    Box is a conversion_box by default, pass in conversion_box=False to disable that behavior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explicitly-tell-diot-to-convert-dictlist-inside" class="md-nav__link">
+    Explicitly tell Diot to convert dict/list inside
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67" class="md-nav__link">
+    6.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mel-brooks" class="md-nav__link">
+    'Mel Brooks'
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#different-as-box-you-have-to-use-diot-for-new-data-in-a-list" class="md-nav__link">
+    Different as box, you have to use Diot for new data in a list
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lone-starr" class="md-nav__link">
+    'Lone Starr'
+  </a>
+  
+    <nav class="md-nav" aria-label="'Lone Starr'">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diot" class="md-nav__link">
+    Diot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-will-create" class="md-nav__link">
+    All will create
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diotdata-2-count-5-diot_nest-true-diot_transform-safe" class="md-nav__link">
+    Diot([('data', 2), ('count', 5)], diot_nest = True, diot_transform = 'safe')
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yes-really" class="md-nav__link">
+    'yes, really'
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyerror" class="md-nav__link">
+    KeyError
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or-use-alias" class="md-nav__link">
+    or use alias:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dt-snakediotonetwo-12" class="md-nav__link">
+    dt = SnakeDiot(oneTwo = 12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or-use-alias_1" class="md-nav__link">
+    or use alias:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dt-cameldiotone_two-12" class="md-nav__link">
+    dt = CamelDiot(one_two = 12)
+  </a>
+  
+    <nav class="md-nav" aria-label="dt = CamelDiot(one_two = 12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordereddiot" class="md-nav__link">
+    OrderedDiot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insertion-allowed-for-ordereddiot" class="md-nav__link">
+    insertion allowed for OrderedDiot
+  </a>
+  
+    <nav class="md-nav" aria-label="insertion allowed for OrderedDiot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frozendiot" class="md-nav__link">
+    FrozenDiot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-key-handler" class="md-nav__link">
+    Missing key handler
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-is-none" class="md-nav__link">
+    d.c is None
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-3" class="md-nav__link">
+    d.c == 3
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+      
+      <label class="md-nav__link" for="__nav_2_1">
+        diot
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="diot" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          diot
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/diot/" class="md-nav__link">
+        diot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/diot.diot/" class="md-nav__link">
+        diot.diot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/diot.transforms/" class="md-nav__link">
+        diot.transforms
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/diot.utils/" class="md-nav__link">
+        diot.utils
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#box-is-a-conversion_box-by-default-pass-in-conversion_boxfalse-to-disable-that-behavior" class="md-nav__link">
+    Box is a conversion_box by default, pass in conversion_box=False to disable that behavior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explicitly-tell-diot-to-convert-dictlist-inside" class="md-nav__link">
+    Explicitly tell Diot to convert dict/list inside
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67" class="md-nav__link">
+    6.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mel-brooks" class="md-nav__link">
+    'Mel Brooks'
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#different-as-box-you-have-to-use-diot-for-new-data-in-a-list" class="md-nav__link">
+    Different as box, you have to use Diot for new data in a list
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lone-starr" class="md-nav__link">
+    'Lone Starr'
+  </a>
+  
+    <nav class="md-nav" aria-label="'Lone Starr'">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diot" class="md-nav__link">
+    Diot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-will-create" class="md-nav__link">
+    All will create
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diotdata-2-count-5-diot_nest-true-diot_transform-safe" class="md-nav__link">
+    Diot([('data', 2), ('count', 5)], diot_nest = True, diot_transform = 'safe')
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yes-really" class="md-nav__link">
+    'yes, really'
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyerror" class="md-nav__link">
+    KeyError
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or-use-alias" class="md-nav__link">
+    or use alias:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dt-snakediotonetwo-12" class="md-nav__link">
+    dt = SnakeDiot(oneTwo = 12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or-use-alias_1" class="md-nav__link">
+    or use alias:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dt-cameldiotone_two-12" class="md-nav__link">
+    dt = CamelDiot(one_two = 12)
+  </a>
+  
+    <nav class="md-nav" aria-label="dt = CamelDiot(one_two = 12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordereddiot" class="md-nav__link">
+    OrderedDiot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insertion-allowed-for-ordereddiot" class="md-nav__link">
+    insertion allowed for OrderedDiot
+  </a>
+  
+    <nav class="md-nav" aria-label="insertion allowed for OrderedDiot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frozendiot" class="md-nav__link">
+    FrozenDiot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-key-handler" class="md-nav__link">
+    Missing key handler
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-is-none" class="md-nav__link">
+    d.c is None
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-3" class="md-nav__link">
+    d.c == 3
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Home</h1>
+                
+                <p><img alt="Logo" src="https://raw.githubusercontent.com/pwwang/diot/master/logo.png" /></p>
+<p><a href="https://pypi.org/project/diot/"><img alt="pypi" src="https://img.shields.io/pypi/v/diot?style=flat-square" /></a> <a href="https://github.com/pwwang/diot"><img alt="tag" src="https://img.shields.io/github/tag/pwwang/diot?style=flat-square" /></a> <a href="https://app.codacy.com/gh/pwwang/diot/dashboard"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square" /></a> <a href="https://app.codacy.com/gh/pwwang/diot/dashboard"><img alt="coverage" src="https://img.shields.io/codacy/coverage/738e49b9cc1745c4ae6a7bb3b198cc3d?style=flat-square" /></a> <img alt="pyver" src="https://img.shields.io/pypi/pyversions/diot?style=flat-square" /> <img alt="building" src="https://img.shields.io/github/actions/workflow/status/pwwang/diot/build.yml?style=flat-square" /> <img alt="docs" src="https://img.shields.io/github/actions/workflow/status/pwwang/diot/docs.yml?label=docs&amp;style=flat-square" /></p>
+<p>Python dictionary with dot notation (A re-implementation of <a href="https://github.com/cdgriffith/Box">python-box</a> with some issues fixed and simplified)</p>
+<p>```python
+from diot import Diot</p>
+<p>movie_data = {
+  "movies": {
+    "Spaceballs": {
+      "imdb stars": 7.1,
+      "rating": "PG",
+      "length": 96,
+      "director": "Mel Brooks",
+      "stars": [{"name": "Mel Brooks", "imdb": "nm0000316", "role": "President Skroob"},
+                {"name": "John Candy","imdb": "nm0001006", "role": "Barf"},
+                {"name": "Rick Moranis", "imdb": "nm0001548", "role": "Dark Helmet"}
+      ]
+    },
+    "Robin Hood: Men in Tights": {
+      "imdb stars": 6.7,
+      "rating": "PG-13",
+      "length": 104,
+      "director": "Mel Brooks",
+      "stars": [
+                {"name": "Cary Elwes", "imdb": "nm0000144", "role": "Robin Hood"},
+                {"name": "Richard Lewis", "imdb": "nm0507659", "role": "Prince John"},
+                {"name": "Roger Rees", "imdb": "nm0715953", "role": "Sheriff of Rottingham"},
+                {"name": "Amy Yasbeck", "imdb": "nm0001865", "role": "Marian"}
+      ]
+    }
+  }
+}</p>
+<h2 id="box-is-a-conversion_box-by-default-pass-in-conversion_boxfalse-to-disable-that-behavior">Box is a conversion_box by default, pass in <code>conversion_box=False</code> to disable that behavior</h2>
+<h2 id="explicitly-tell-diot-to-convert-dictlist-inside">Explicitly tell Diot to convert dict/list inside</h2>
+<p>movie_diot = Diot(movie_data)</p>
+<p>movie_diot.movies.Robin_Hood_Men_in_Tights.imdb_stars</p>
+<h2 id="67">6.7</h2>
+<p>movie_diot.movies.Spaceballs.stars[0].name</p>
+<h2 id="mel-brooks">'Mel Brooks'</h2>
+<h2 id="different-as-box-you-have-to-use-diot-for-new-data-in-a-list">Different as box, you have to use Diot for new data in a list</h2>
+<p>movie_diot.movies.Spaceballs.stars.append(
+	Diot({"name": "Bill Pullman", "imdb": "nm0000597", "role": "Lone Starr"}))
+movie_diot.movies.Spaceballs.stars[-1].role</p>
+<h2 id="lone-starr">'Lone Starr'</h2>
+<p>```</p>
+<h3 id="install">Install</h3>
+<p><code>shell
+pip install -U diot</code></p>
+<h3 id="api">API</h3>
+<p>https://pwwang.github.io/diot/api/diot/</p>
+<h3 id="usage">Usage</h3>
+<h4 id="diot">Diot</h4>
+<p>Instantiated the same ways as <code>dict</code>
+```python
+Diot({'data': 2, 'count': 5})
+Diot(data=2, count=5)
+Diot({'data': 2, 'count': 1}, count=5)
+Diot([('data', 2), ('count', 5)])</p>
+<h2 id="all-will-create">All will create</h2>
+<h2 id="diotdata-2-count-5-diot_nest-true-diot_transform-safe">Diot([('data', 2), ('count', 5)], diot_nest = True, diot_transform = 'safe')</h2>
+<p>```</p>
+<p>Same as <code>python-box</code>, <code>Diot</code> is a subclass of dict which overrides some base functionality to make sure everything stored in the dict can be accessed as an attribute or key value.</p>
+<p><code>python
+diot = Diot({'data': 2, 'count': 5})
+diot.data == diot['data'] == getattr(diot, 'data')</code></p>
+<p>By default, diot uses a safe transformation to transform keys into safe names that can be accessed by <code>diot.xxx</code>
+```python
+dt = Diot({"321 Is a terrible Key!": "yes, really"})
+dt.<em>321_Is_a_terrible_Key</em></p>
+<h2 id="yes-really">'yes, really'</h2>
+<p>```</p>
+<p>Different as <code>python-box</code>, duplicate attributes are not allowed.
+```python
+dt = Diot({"!bad!key!": "yes, really", ".bad.key.": "no doubt"})</p>
+<h2 id="keyerror">KeyError</h2>
+<p>```</p>
+<p>Use different transform functions:</p>
+<p>```python
+dt = Diot(oneTwo = 12, diot_transform = 'snake_case')</p>
+<h2 id="or-use-alias">or use alias:</h2>
+<h2 id="dt-snakediotonetwo-12">dt = SnakeDiot(oneTwo = 12)</h2>
+<p>dt.one_two == dt['one_two'] == dt['oneTwo'] == 12</p>
+<p>dt = Diot(one_two = 12, diot_transform = 'camel_case')</p>
+<h2 id="or-use-alias_1">or use alias:</h2>
+<h2 id="dt-cameldiotone_two-12">dt = CamelDiot(one_two = 12)</h2>
+<p>dt.oneTwo == dt['one_two'] == dt['oneTwo'] == 12</p>
+<p>dt = Diot(one_two = 12, diot_transform = 'upper')
+dt.ONE_TWO == dt['one_two'] == dt['ONETWO'] == 12</p>
+<p>dt = Diot(ONE_TWO = 12, diot_transform = 'lower')
+dt.one_two == dt['ONE_TWO'] == dt['one_two'] == 12
+```</p>
+<p>Use your own transform function:</p>
+<p>```python
+import inflection</p>
+<p>dt = Diot(post = 10, diot_transform = inflection.pluralize)
+dt.posts == dt['posts'] == dt['post'] == 10
+```</p>
+<h4 id="ordereddiot">OrderedDiot</h4>
+<p>```python
+diot_of_order = OrderedDiot()
+diot_of_order.c = 1
+diot_of_order.a = 2
+diot_of_order.d = 3</p>
+<p>list(diot_of_order.keys()) == ['c', 'a', 'd']</p>
+<h2 id="insertion-allowed-for-ordereddiot">insertion allowed for OrderedDiot</h2>
+<p>od = OrderedDiot()
+od.insert(0, "c", "d")
+od.insert(None, "x", "y")
+od.insert_before('c', "e", "f")
+od.insert_after("a", ("g", "h"))</p>
+<p>od2 = OrderedDiot()
+od2.a1 = 'b1'
+od2.c1 = 'd1'
+od.insert(-1, od2)</p>
+<p>od3 = OrderedDiot()
+od3.a2 = 'b2'
+od3.c2 = 'd2'
+od.insert_before('c', od3)
+```</p>
+<h4 id="frozendiot">FrozenDiot</h4>
+<p><code>python
+fd = FrozenDiot(a=1, b=3)
+fd.c = 3 # DiotFrozenError
+with fd.thaw():
+    fd.c = 3
+fd.c == 3</code></p>
+<h4 id="missing-key-handler">Missing key handler</h4>
+<p>```python
+d = Diot(a=1, b=2, diot_missing=ValueError)
+d['c'] # ValueError
+d.c # AttributeError from ValueError</p>
+<p>d = Diot(a=1, b=2, diot_missing=ValueError("Custom message"))</p>
+<p>d = Diot(a=1, b=2, diot_missing=None)</p>
+<h2 id="dc-is-none">d.c is None</h2>
+<p>d = Diot(a=1, b=2, diot_missing=lambda key, diot: diot.a + diot.b)</p>
+<h2 id="dc-3">d.c == 3</h2>
+<p>```</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+      
+        
+        <a href="api/diot/" class="md-footer__link md-footer__link--next" aria-label="Next: diot" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              diot
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.709b4209.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.29db7785.min.js"></script>
+      
+        <script src="js/mkapi.js"></script>
+      
+    
+  </body>
+</html>
