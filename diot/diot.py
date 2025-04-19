@@ -60,6 +60,11 @@ class Diot(dict):
                 in descendants
                 False: Don'f freeze
                 'shallow': Only freeze at depth = 1
+            diot_missing: How to deal with missing keys when accessing them
+                - An exception class or object to raise
+                - `None` to return `None`
+                - A custom function with first argument the key and second
+                    the diot object.
 
     """
 
