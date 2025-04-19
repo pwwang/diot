@@ -505,6 +505,9 @@ def test_missing_handler():
     with pytest.raises(RuntimeError, match="abc"):
         d["c"]
 
+    with pytest.raises(RuntimeError, match="abc"):
+        d.c
+
     d = Diot(a=1, b=2, diot_missing=lambda key, diot: diot.a + diot.b)
     assert d.c == 3
 

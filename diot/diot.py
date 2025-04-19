@@ -23,6 +23,26 @@ if TYPE_CHECKING:
     from argparse import Namespace
 
 
+class _DiotMissingDefault:
+    """The default value for diot_missing"""
+
+    # Make it a singleton
+    __slots__ = ()
+    __instance = None
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+
+# The default value for diot_missing
+# When accessed with d.a, an AttributeError will be raised
+# When accessed with d['a'], a KeyError will be raised
+# This class makes it pickable than object
+DIOT_MISSING_DEFAULT = _DiotMissingDefault()
+
+
 class Diot(dict):
     """Dictionary with dot notation
 
@@ -86,6 +106,7 @@ class Diot(dict):
         diot_nest: Union[bool, Iterable[type]] = True,
         diot_transform: Union[Callable[[str], str], str] = "safe",
         diot_frozen: Union[bool, str] = False,
+        diot_missing: Any = DIOT_MISSING_DEFAULT,
     ) -> Diot:
         """Get a Diot object from an argparse namespace
 
@@ -122,6 +143,7 @@ class Diot(dict):
             diot_nest=diot_nest,
             diot_transform=diot_transform,
             diot_frozen=diot_frozen,
+            diot_missing=diot_missing,
         )
         if not recursive:
             return ret
@@ -152,7 +174,7 @@ class Diot(dict):
         )
         self.__diot__["transform"] = kwargs.pop("diot_transform", "safe")
         self.__diot__["frozen"] = False
-        self.__diot__["missing"] = kwargs.pop("diot_missing", KeyError)
+        self.__diot__["missing"] = kwargs.pop("diot_missing", DIOT_MISSING_DEFAULT)
         diot_frozen = kwargs.pop("diot_frozen", False)
         if isinstance(self.__diot__["transform"], str):
             self.__diot__["transform"] = TRANSFORMS[self.__diot__["transform"]]
@@ -228,6 +250,13 @@ class Diot(dict):
         try:
             return self[name]
         except Exception as exc:
+            # if self.__diot__["missing"] is DIOT_MISSING_DEFAULT:
+            # In case it is picked somewhere else
+            if isinstance(self.__diot__["missing"], _DiotMissingDefault):
+                raise AttributeError(
+                    f"{self.__class__.__name__} object has no attribute {name!r}"
+                ) from None
+
             raise exc from None
 
     def __getitem__(self, name: str) -> Any:
@@ -236,6 +265,10 @@ class Diot(dict):
             return super().__getitem__(original_key)
         except KeyError as keyerr:
             missing_handler = self.__diot__["missing"]
+            # if self.__diot__["missing"] is DIOT_MISSING_DEFAULT:
+            # In case it is picked somewhere else
+            if isinstance(self.__diot__["missing"], _DiotMissingDefault):
+                raise
             if missing_handler is None:
                 return None
             if isinstance(missing_handler, Exception):
@@ -244,6 +277,7 @@ class Diot(dict):
                 missing_handler, Exception
             ):
                 raise missing_handler(str(keyerr)) from None
+
             return missing_handler(name, self)  # type: ignore
 
     def pop(self, name: str, *value) -> Any:
@@ -520,6 +554,7 @@ class Diot(dict):
             diot_nest=self.__diot__["nest"],
             diot_transform=self.__diot__["transform"],
             diot_frozen=self.__diot__["frozen"],
+            diot_missing=self.__diot__["missing"],
         )
 
     __copy__ = copy
@@ -546,6 +581,7 @@ class Diot(dict):
                 "diot_transform": self.__diot__["transform"],
                 "diot_nest": self.__diot__["nest"],
                 "diot_frozen": self.__diot__["frozen"],
+                "diot_missing": self.__diot__["missing"],
             },
         )
 
