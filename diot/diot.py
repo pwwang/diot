@@ -82,10 +82,9 @@ class Diot(dict):
                 'shallow': Only freeze at depth = 1
             diot_missing: How to deal with missing keys when accessing them
                 - An exception class or object to raise
-                - `None` to return `None`
                 - A custom function with first argument the key and second
                     the diot object.
-
+                - Other values will be used as the default value directly
     """
 
     __slots__ = ("__diot__", "__dict__")
@@ -126,9 +125,9 @@ class Diot(dict):
                 - `shallow`: Only freeze at depth = 1
             diot_missing: How to deal with missing keys when accessing them
                 - An exception class or object to raise
-                - `None` to return `None`
                 - A custom function with first argument the key and second
                     the diot object.
+                - Other values will be used as the default value directly
         Returns:
             The converted diot object.
         """
@@ -269,16 +268,19 @@ class Diot(dict):
             # In case it is picked somewhere else
             if isinstance(self.__diot__["missing"], _DiotMissingDefault):
                 raise
-            if missing_handler is None:
-                return None
+
             if isinstance(missing_handler, Exception):
                 raise missing_handler from None
-            if isinstance(missing_handler, type) and issubclass(
-                missing_handler, Exception
+            if (
+                isinstance(missing_handler, type)
+                and issubclass(missing_handler, Exception)
             ):
                 raise missing_handler(str(keyerr)) from None
 
-            return missing_handler(name, self)  # type: ignore
+            if callable(missing_handler):
+                return missing_handler(name, self)  # type: ignore
+
+            return missing_handler
 
     def pop(self, name: str, *value) -> Any:
         """Pop a key from the object and return the value. If key does not

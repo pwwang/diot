@@ -513,6 +513,10 @@ def test_missing_handler():
 
     assert "c" not in d
 
+    d = Diot(a=1, b=2, diot_missing=3)
+    assert d.c == 3
+    assert "c" not in d
+
 
 def test_diot_construct_ignores_none():
 
