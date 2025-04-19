@@ -28,7 +28,7 @@ yaml = [ "pyyaml"]
 toml = [ "rtoml", "tomli"]
 all = [ "pyyaml", "rtoml", "tomli"]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^8"
 pytest-cov = "^6"
 
