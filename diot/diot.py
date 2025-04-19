@@ -222,8 +222,8 @@ class Diot(dict):
             return self.__dict__["__diot__"]
         try:
             return self[name]
-        except Exception:
-            raise AttributeError(name) from None
+        except Exception as exc:
+            raise exc from None
 
     def __getitem__(self, name: str) -> Any:
         original_key = self.__diot__["keymaps"].get(name, name)
