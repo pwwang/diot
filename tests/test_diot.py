@@ -525,3 +525,42 @@ def test_diot_construct_ignores_none():
 
     d = Diot(None, a=1)
     assert d == {"a": 1}
+
+
+def test_hashable():
+    d1 = Diot(a=1, b=2)
+    d2 = Diot(a=1, b=2)
+
+    # basic hashability
+    assert isinstance(hash(d1), int)
+
+    # hash is stable for the same object
+    assert hash(d1) == hash(d1)
+
+    # distinct objects have distinct hashes (identity-based)
+    assert hash(d1) != hash(d2)
+
+    # usable in a set
+    s = {d1, d2}
+    assert len(s) == 2
+    assert d1 in s
+    assert d2 in s
+
+    # usable as dict keys
+    mapping = {d1: "first", d2: "second"}
+    assert mapping[d1] == "first"
+    assert mapping[d2] == "second"
+
+    # hash is unaffected by mutations (identity-based, not content-based)
+    h_before = hash(d1)
+    d1.c = 3
+    assert hash(d1) == h_before
+
+    # works for subclasses too
+    from diot import CamelDiot, OrderedDiot
+    cd = CamelDiot(a_b=1)
+    od = OrderedDiot(x=1)
+    assert isinstance(hash(cd), int)
+    assert isinstance(hash(od), int)
+    s2 = {cd, od}
+    assert len(s2) == 2

@@ -438,6 +438,13 @@ class Diot(dict):
     def __str__(self) -> str:
         return repr(dict(self))
 
+    def __hash__(self) -> int:  # type: ignore[override]
+        # dict sets __hash__ = None; restore identity-based hashing so Diot
+        # objects can be used in sets and as dict keys.  Identity hashing is
+        # the only safe choice for a mutable mapping because the contents can
+        # change after the object is inserted into a set/dict.
+        return id(self)
+
     def freeze(self, frozen: Union[str, bool] = "shallow") -> None:
         """Freeze the diot object
 
