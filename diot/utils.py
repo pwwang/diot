@@ -1,9 +1,5 @@
 """Utilities for diot"""
-from typing import TYPE_CHECKING, Any, Iterable
-
-
-if TYPE_CHECKING:
-    from .diot import Diot
+from typing import Any, Iterable, cast
 
 
 class DiotFrozenError(Exception):
@@ -25,31 +21,33 @@ def nest(
         tuple in types and isinstance(value, tuple)  # type: ignore
     ):
         # use value.__class__ to keep user-subclassed list or tuple
-        out = [nest(val, types, dest_type, frozen) for val in value]
+        out = [nest(val, types, dest_type, frozen) for val in value]  # type: ignore
         try:
-            return value.__class__(out)
+            return value.__class__(out)  # type: ignore[call-arg, operator]
         except Exception:  # pragma: no cover
             return out
 
     if dict in types and isinstance(value, dict):  # type: ignore
-        if issubclass(value.__class__, dest_type):
-            return value
+        dct = cast(dict[Any, Any], value)
+        if issubclass(dct.__class__, dest_type):
+            return dct
 
         return dest_type(
             [
                 (key, nest(val, types, dest_type, frozen))
-                for key, val in value.items()
+                for key, val in dct.items()
             ]
         )
     return value
 
 
-def to_dict(value: "Diot") -> dict:
+def to_dict(value: Any) -> Any:
     """Convert converted Diot objects back to dict"""
     if isinstance(value, dict):
-        return {key: to_dict(val) for key, val in value.items()}
+        d = cast(dict[Any, Any], value)
+        return {key: to_dict(val) for key, val in d.items()}
     if isinstance(value, tuple):
-        return tuple((to_dict(val) for val in value))
+        return tuple(to_dict(val) for val in cast(tuple[Any, ...], value))
     if isinstance(value, list):
-        return [to_dict(val) for val in value]
+        return [to_dict(val) for val in cast(list[Any], value)]
     return value

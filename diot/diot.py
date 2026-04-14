@@ -14,6 +14,7 @@ from typing import (
     Optional,
     Tuple,
     Union,
+    cast,
 )
 
 from .transforms import TRANSFORMS
@@ -43,7 +44,7 @@ class _DiotMissingDefault:
 DIOT_MISSING_DEFAULT = _DiotMissingDefault()
 
 
-class Diot(dict):
+class Diot(dict[str, Any]):
     """Dictionary with dot notation
 
     Examples:
@@ -89,12 +90,12 @@ class Diot(dict):
 
     __slots__ = ("__diot__", "__dict__")
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args: Any, **kwargs: Any) -> "Diot":
         ret = super().__new__(cls)
         # unpickling will not call __init__
         # we use a flag '__inited__' to tell if __init__ has been called
         # is there a better way?
-        ret.__init__(*args, **kwargs)
+        ret.__init__(*args, **kwargs)  # type: ignore[misc]
         return ret
 
     @classmethod
@@ -152,7 +153,7 @@ class Diot(dict):
                 ret[key] = cls.from_namespace(value)
         return ret
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         if self.__dict__.get("__inited__"):
             return
 
@@ -280,9 +281,9 @@ class Diot(dict):
             if callable(missing_handler):
                 return missing_handler(name, self)  # type: ignore
 
-            return missing_handler
+            return cast(Any, missing_handler)
 
-    def pop(self, name: str, *value) -> Any:
+    def pop(self, name: str, *value: Any) -> Any:
         """Pop a key from the object and return the value. If key does not
         exist, return the given default value
 
@@ -323,7 +324,7 @@ class Diot(dict):
             del self.__diot__["keymaps"][self.__diot__["transform"](key)]
         return key, val
 
-    def update(self, *value, **kwargs) -> None:
+    def update(self, *value: Any, **kwargs: Any) -> None:
         """Update the object. Shortcut: `|=`
 
         Args:
@@ -340,7 +341,7 @@ class Diot(dict):
         for key, val in dict_to_update.items():
             self[key] = nest(val, self.__diot__["nest"], type(self), False)
 
-    def update_recursively(self, *value, **kwargs) -> None:
+    def update_recursively(self, *value: Any, **kwargs: Any) -> None:
         """Update the object. Shortcut: `|=`
 
         Args:
@@ -369,12 +370,12 @@ class Diot(dict):
             else:
                 self[key].update_recursively(val)
 
-    def __or__(self, other: Any) -> Diot:
+    def __or__(self, other: dict[str, Any]) -> "Diot":  # type: ignore[override]
         ret = self.copy()
         ret.update(other)
         return ret
 
-    def __ior__(self, other: Any) -> Diot:
+    def __ior__(self, other: dict[str, Any]) -> "Diot":  # type: ignore[override]
         self.update(other)
         return self
 
@@ -390,7 +391,7 @@ class Diot(dict):
 
     __delattr__ = __delitem__
 
-    def _repr(self, hide=None, items="dict"):
+    def _repr(self, hide: Any = None, items: str = "dict") -> str:
         """Compose the repr for the object. If the config item is default, hide
         it. If argument hide is specified, hide that item anyway"""
         diot_class = self.__class__.__name__
@@ -516,7 +517,7 @@ class Diot(dict):
         Returns:
             The accessible (transformed) keys
         """
-        return self.__diot__["keymaps"].keys()
+        return cast(dict[str, str], self.__diot__["keymaps"]).keys()
 
     def get(self, name: str, value: Any = None) -> Any:
         """Get the value of a key name
@@ -570,8 +571,7 @@ class Diot(dict):
 
     def __deepcopy__(self, memo: Optional[Dict[int, Any]] = None) -> Diot:
         out = self.__class__()
-        for dk, dv in self.__diot__.items():
-            out.__diot__[dk] = deepcopy(dv)
+        out.__dict__["__diot__"] = deepcopy(self.__diot__)
 
         memo = memo or {}
         memo[id(self)] = out
@@ -580,10 +580,10 @@ class Diot(dict):
         return out
 
     # for pickling and unpickling
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return {}
 
-    def __getnewargs_ex__(self):
+    def __getnewargs_ex__(self) -> tuple[tuple[Any, ...], dict[str, Any]]:
         return (
             (list(self.items()),),
             {
@@ -608,10 +608,10 @@ class Diot(dict):
 
     def to_json(
         self,
-        filename: Optional[Union[str, PathLike]] = None,
+        filename: Optional[Union[str, PathLike[str]]] = None,
         encoding: str = "utf-8",
         errors: str = "strict",
-        **json_kwargs,
+        **json_kwargs: Any,
     ) -> Optional[str]:
         """Convert to a json string or save it to json file
 
@@ -641,11 +641,11 @@ class Diot(dict):
 
     def to_yaml(
         self,
-        filename: Optional[Union[str, PathLike]] = None,
+        filename: Optional[Union[str, PathLike[str]]] = None,
         default_flow_style: bool = False,
         encoding: str = "utf-8",
         errors: str = "strict",
-        **yaml_kwargs,
+        **yaml_kwargs: Any,
     ) -> Optional[str]:
         """Convert to a yaml string or save it to yaml file
 
@@ -670,7 +670,7 @@ class Diot(dict):
             ) from None
         yaml_dump = self.to_dict()
         if not filename:
-            return yaml.dump(
+            return yaml.dump(  # type: ignore
                 yaml_dump, default_flow_style=default_flow_style, **yaml_kwargs
             )
         with open(filename, "w", encoding=encoding, errors=errors) as fyml:
@@ -686,7 +686,7 @@ class Diot(dict):
 
     def to_toml(
         self,
-        filename: Optional[Union[str, PathLike]] = None,
+        filename: Optional[Union[str, PathLike[str]]] = None,
         encoding: str = "utf-8",
         errors: str = "strict",
     ) -> Optional[str]:
@@ -721,7 +721,7 @@ class Diot(dict):
 class CamelDiot(Diot):
     """With camel case conversion"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         kwargs["diot_transform"] = TRANSFORMS["camel_case"]
         super().__init__(*args, **kwargs)
 
@@ -732,7 +732,7 @@ class CamelDiot(Diot):
 class SnakeDiot(Diot):
     """With snake case conversion"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         kwargs["diot_transform"] = TRANSFORMS["snake_case"]
         super().__init__(*args, **kwargs)
 
@@ -743,7 +743,7 @@ class SnakeDiot(Diot):
 class FrozenDiot(Diot):
     """The frozen diot"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         kwargs["diot_frozen"] = True
         super().__init__(*args, **kwargs)
 
@@ -754,7 +754,7 @@ class FrozenDiot(Diot):
 class OrderedDiot(Diot):
     """With key order preserved"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.__dict__.setdefault("__diot__", {})
         self.__diot__["orderedkeys"] = [
             key[0] if isinstance(key, tuple) else key
@@ -777,12 +777,13 @@ class OrderedDiot(Diot):
         Returns:
             The items (key-value) of the object
         """
-        return ((key, self[key]) for key in self.__diot__["orderedkeys"])
+        orderedkeys = cast(list[str], self.__diot__["orderedkeys"])
+        return ((key, self[key]) for key in orderedkeys)
 
     def insert(
         self,
-        position: int,
-        name: Union[str, Tuple[str, Any]],
+        position: Optional[int],
+        name: Union[str, Tuple[str, Any], Dict[str, Any]],
         value: Any = None,
     ) -> None:
         """Insert an item to certain position
@@ -876,24 +877,24 @@ class OrderedDiot(Diot):
             raise KeyError("Key already exists: %s" % name)
         self.insert(position + 1, name, value)
 
-    def keys(self) -> Iterable:  # type: ignore[override]
+    def keys(self) -> Iterable[str]:  # type: ignore[override]
         """Get the keys in the order they are added
 
         Returns:
             The keys (untransformed)
         """
-        return (key for key in self.__diot__["orderedkeys"])
+        return (key for key in cast(list[str], self.__diot__["orderedkeys"]))
 
-    def __iter__(self) -> Iterable:  # type: ignore[override]
+    def __iter__(self) -> Iterator[str]:  # type: ignore[override]
         return iter(self.keys())
 
-    def values(self) -> Iterable:  # type: ignore[override]
+    def values(self) -> Iterable[Any]:  # type: ignore[override]
         """Get the values in the order they are added
 
         Returns:
             The values of the object
         """
-        return (self[key] for key in self.__diot__["orderedkeys"])
+        return (self[key] for key in cast(list[str], self.__diot__["orderedkeys"]))
 
     def __delitem__(self, name: str) -> None:
         super().__delitem__(name)
@@ -904,7 +905,7 @@ class OrderedDiot(Diot):
 
     __delattr__ = __delitem__
 
-    def pop(self, name: str, *value) -> Any:
+    def pop(self, name: str, *value: Any) -> Any:
         ret = super().pop(name, *value)
         name = self.__diot__["keymaps"].get(name, name)
         if name in self.__diot__["orderedkeys"]:
@@ -913,8 +914,8 @@ class OrderedDiot(Diot):
             ]
         return ret
 
-    def __reversed__(self) -> Iterable:  # type: ignore[override]
-        return reversed(self.__diot__["orderedkeys"])
+    def __reversed__(self) -> Iterator[str]:  # type: ignore[override]
+        return reversed(cast(list[str], self.__diot__["orderedkeys"]))
 
     def clear(self) -> None:
         super().clear()
