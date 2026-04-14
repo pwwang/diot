@@ -1,5 +1,11 @@
 # Change Log
 
+
+## 0.3.4
+
+- refactor: use uv instead of poetry to manage dependencies
+- refactor: add type hints to Diot class and utility functions
+
 ## 0.3.3
 
 - chore: update __all__ to include all exported classes
