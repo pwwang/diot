@@ -50,5 +50,5 @@ jobs:
         with:
           python-version: "3.12"
       - name: Publish to PyPI
-        run: uv publish --token ${{ secrets.PYPI_TOKEN }}
+        run: uv publish --token ${{ secrets.PYPI_PASSWORD }}
         if: success()
