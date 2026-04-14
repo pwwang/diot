@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-This will not be included in the distribution.
-The distribution is managed by poetry
-This file is kept only for
+This file is kept only for:
 1. Github to index the dependents
 2. pip install -e .
 
-Do NOT use this to install this package, unless you handled the dependencies
-by your self:
-
-pip install git+https://...
+The project is managed by uv. Use `uv sync` to install dependencies.
 """
 from setuptools import setup
 

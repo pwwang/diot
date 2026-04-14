@@ -1,36 +1,42 @@
 [build-system]
-requires = [ "poetry>=1.0",]
-build-backend = "poetry.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = "diot"
 version = "0.3.3"
 description = "Python dictionary with dot notation."
-authors = [ "pwwang <pwwang@pwwang.com>",]
-license = "MIT"
+authors = [{ name = "pwwang", email = "pwwang@pwwang.com" }]
+license = { text = "MIT" }
 readme = "README.md"
-homepage = "https://github.com/pwwang/diot"
-repository = "https://github.com/pwwang/diot"
+requires-python = ">=3.9"
+dependencies = [
+    "inflection>=0.5",
+]
 
-[tool.poetry.build]
-generate-setup-file = true
-
-[tool.poetry.dependencies]
-python = "^3.9"
-inflection = "^0.5"
-pyyaml = { version="^6", optional = true}
+[project.optional-dependencies]
+yaml = ["pyyaml>=6"]
 # Use rtoml only when the wheel is available (linux)
-rtoml = {version = "^0.12", optional = true, platform = "linux"}
-tomli = {version = "^2.0", optional = true, markers = 'sys_platform != "linux"'}
+toml = [
+    "rtoml>=0.12; sys_platform == 'linux'",
+    "tomli>=2.0; sys_platform != 'linux'",
+]
+all = [
+    "pyyaml>=6",
+    "rtoml>=0.12; sys_platform == 'linux'",
+    "tomli>=2.0; sys_platform != 'linux'",
+]
 
-[tool.poetry.extras]
-yaml = [ "pyyaml"]
-toml = [ "rtoml", "tomli"]
-all = [ "pyyaml", "rtoml", "tomli"]
+[project.urls]
+Homepage = "https://github.com/pwwang/diot"
+Repository = "https://github.com/pwwang/diot"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8"
-pytest-cov = "^6"
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "pytest>=8",
+    "pytest-cov>=6",
+]
 
 [tool.mypy]
 ignore_missing_imports = true
