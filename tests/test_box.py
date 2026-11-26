@@ -481,3 +481,44 @@ def test_to_toml_file(tmp_path):
         assert data == {
             key: val for key, val in test_dict.items() if key != "diot_nest"
         }
+
+
+def test_to_yaml_without_pyyaml(monkeypatch, tmp_path):
+    import sys
+    import types
+
+    yaml_stub = types.ModuleType("yaml")
+
+    def dump(obj, stream=None, **kwargs):
+        if stream is None:
+            return repr(obj)
+        stream.write(repr(obj))
+
+    yaml_stub.dump = dump
+    monkeypatch.setitem(sys.modules, "yaml", yaml_stub)
+
+    a = Diot(a=1)
+    assert a.to_yaml() == "{'a': 1}"
+    tmp_yaml_file = tmp_path / "diot_test_to_yaml_stub.yaml"
+    assert a.to_yaml(tmp_yaml_file) is None
+    assert tmp_yaml_file.read_text() == "{'a': 1}"
+
+
+def test_to_toml_without_rtoml(monkeypatch, tmp_path):
+    import sys
+    import types
+
+    rtoml_stub = types.ModuleType("rtoml")
+    rtoml_stub.dumps = lambda obj: repr(obj)
+
+    def dump(obj, stream):
+        stream.write(repr(obj))
+
+    rtoml_stub.dump = dump
+    monkeypatch.setitem(sys.modules, "rtoml", rtoml_stub)
+
+    a = Diot(a=1)
+    assert a.to_toml() == "{'a': 1}"
+    tmp_toml_file = tmp_path / "diot_test_to_toml_stub.toml"
+    assert a.to_toml(tmp_toml_file) is None
+    assert tmp_toml_file.read_text() == "{'a': 1}"

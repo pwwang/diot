@@ -365,6 +365,14 @@ def test_pickle():
     assert a.aa == 1
 
 
+def test_getattr_without_init():
+    # An instance whose __init__ never ran, e.g. one restored by pickle
+    # protocol 0/1 (they bypass __getnewargs_ex__), has no __diot__ config.
+    d = dict.__new__(Diot)
+    with pytest.raises(KeyError, match="__diot__"):
+        d.__diot__
+
+
 def test_from_namespace():
     ns = Namespace(a=1, b=2)
     d = Diot.from_namespace(ns)
