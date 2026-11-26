@@ -88,7 +88,11 @@ class Diot(dict[str, Any]):
                 - Other values will be used as the default value directly
     """
 
-    __slots__ = ("__diot__", "__dict__")
+    # `__diot__` must NOT be a slot. It is stored in the instance __dict__ by
+    # __init__ and __deepcopy__, and an unset slot descriptor shadows that dict
+    # entry: every `self.__diot__` read then raised AttributeError and fell back
+    # into __getattr__, which showed up as ~14M fallback calls per run.
+    __slots__ = ("__dict__",)
 
     def __new__(cls, *args: Any, **kwargs: Any) -> "Diot":
         ret = super().__new__(cls)
@@ -179,10 +183,12 @@ class Diot(dict[str, Any]):
         if isinstance(self.__diot__["transform"], str):
             self.__diot__["transform"] = TRANSFORMS[self.__diot__["transform"]]
 
-        super().__init__(
-            *(arg for arg in args if arg is not None),
-            **kwargs,
-        )
+        # The generator expression here allocated a generator object on every
+        # construction (785k per run, ~1s of pure overhead). `args` is forwarded
+        # unchanged unless a None is actually present, which is the rare case.
+        if args and None in args:
+            args = tuple(arg for arg in args if arg is not None)
+        super().__init__(*args, **kwargs)
 
         for key in self:
             transformed_key = self.__diot__["transform"](key)
@@ -196,13 +202,24 @@ class Diot(dict[str, Any]):
             self.__diot__["keymaps"][transformed_key] = key
 
         # nest values
-        for key in self:
-            self[key] = nest(
-                self[key],
-                self.__diot__["nest"],
-                self.__class__,
-                self.__diot__["frozen"] is True,
-            )
+        types = self.__diot__["nest"]
+        cls = self.__class__
+        frozen_flag = self.__diot__["frozen"] is True
+
+        if type(self).__setitem__ is Diot.__setitem__:
+            # Writing through self[key] used to nest twice: once here and again
+            # inside __setitem__. Nest once and store the result directly, which
+            # also skips the keymap lookups __setitem__ repeats for a known key.
+            for key in self:
+                value = dict.__getitem__(self, key)
+                nested = nest(value, types, cls, frozen_flag)
+                if nested is not value:
+                    dict.__setitem__(self, key, nested)
+        else:
+            # A subclass overrides __setitem__ (OrderedDiot records key order, and
+            # user subclasses may do more). Keep the original dispatch for those.
+            for key in self:
+                self[key] = nest(self[key], types, cls, frozen_flag)
 
         self.__diot__["frozen"] = diot_frozen
 
