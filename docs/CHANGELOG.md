@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.6
+
+- perf: remember safe_transform results, ~1.6x faster config loading
+
 ## 0.3.5
 
 - ci: update PyPI publish token secret from PYPI_TOKEN to PYPI_PASSWORD
