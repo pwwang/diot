@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.5
+
+- ci: update PyPI publish token secret from PYPI_TOKEN to PYPI_PASSWORD
+- ci: add build step before publishing to PyPI
+- perf: cut Diot construction cost 2.5x
+- test: add test for full coverage
 
 ## 0.3.4
 
