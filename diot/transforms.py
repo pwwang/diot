@@ -8,6 +8,13 @@ import re
 import keyword
 import inflection
 
+# Keys are transformed far more often than they are distinct: building one
+# Diot of N keys transforms each key several times, so a config with a few
+# thousand keys makes millions of identical calls. The regexes below dominate
+# the profile, so remembering results is the single biggest win in Diot.
+_SAFE_CACHE: Dict[tuple, str] = {}
+_SAFE_CACHE_MAX = 8192
+
 
 def safe_transform(item: str) -> str:
     """Transform an arbitrary key into a safe key for dot notation
@@ -23,6 +30,25 @@ def safe_transform(item: str) -> str:
     Returns:
         The safely-transformed item
     """
+    # Only str and bytes are remembered: other objects may change their str()
+    # representation between calls, so their result must not be reused.
+    if type(item) is not str and type(item) is not bytes:
+        return _safe_transform(item)
+
+    key = (type(item), item)
+    hit = _SAFE_CACHE.get(key)
+    if hit is not None:
+        return hit
+
+    out = _safe_transform(item)
+    if len(_SAFE_CACHE) >= _SAFE_CACHE_MAX:
+        _SAFE_CACHE.clear()
+    _SAFE_CACHE[key] = out
+    return out
+
+
+def _safe_transform(item: str) -> str:
+    """Transform a key, without remembering the result"""
     # // support bytes transform to keys in bytes?
     if isinstance(item, bytes):
         item = item.decode("utf-8")
